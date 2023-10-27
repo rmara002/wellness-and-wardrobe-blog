@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+<head>
+    <title>Login to <%=siteName%></title>
+    <link rel="stylesheet" type="text/css" href="/main.css" />
+</head>
+<body>
+    <h1>Login to <%=siteName%></h1>
+    <form method="POST" action="/loggedin">
+        <p>Username: <input id="username" type="text" name="username" required /></p>
+        <p>Password: <input id="password" type="password" name="password" required /></p>
+        <input type="submit" value="Login" />
+    </form>
+</body>
+</html>
