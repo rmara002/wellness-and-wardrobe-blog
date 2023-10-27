@@ -10,17 +10,25 @@
 
     <!-- Add the navigation bar -->
     <nav>
+      <div> <!-- New wrapping div for the left links -->
         <a href="/" class="nav-links">Home</a>
         <a href="about" class="nav-links">About <%=siteName%></a>
-        <a href="register" class="nav-links">Register with us</a>
-        <a href="listusers" class="nav-links">List users</a>
-        <a href="login" class="nav-links">Login</a>
-        <a href="deleteuser" class="nav-links">Delete User</a>
-        <a href="logout" class="nav-links">Logout</a>
+        <a href="search" class="nav-links">Search</a>
+      </div> <!-- End of wrapping div for the left links -->
+    
+      <div> <!-- New wrapping div for the right links -->
+        <% if (!username) { %> <!-- If there's no username, show the Login and Register links -->
+          <a href="login" class="nav-links">Login</a>
+          <a href="register" class="nav-links">Register</a>
+        <% } else { %> <!-- If there's a username, show the username and the Logout link, and remove the Login and Register links -->
+          <span class="nav-links"><%= username %></span>
+          <a href="logout" class="nav-links">Logout</a>
+        <% } %>
+      </div> <!-- End of wrapping div for the right links -->
     </nav>
 
     <h1>About <%=siteName%></h1>
-    <p>Wellness And Wardrobe is for fashion enthusiasts, health-conscious individuals, bloggers, 
+    <p class="about-description">Wellness And Wardrobe is for fashion enthusiasts, health-conscious individuals, bloggers, 
       and anyone seeking fashion inspiration or wellness tips.</p>
   </body>
 </html>
