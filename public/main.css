@@ -144,3 +144,27 @@ input[type="submit"]:hover {
   background-color: #9AAB89;
   color: white;
 }
+
+/* Style for the login container */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; 
+}
+
+.login-container form {
+  text-align: center;
+}
+
+/* Style for the register container */
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; 
+}
+
+.register-container form {
+  text-align: center;
+}
