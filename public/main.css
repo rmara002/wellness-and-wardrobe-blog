@@ -7,11 +7,13 @@ body {
 h1, h2 {
   font-size: 20px;
   color: #9AAB89; 
+  text-align: center;
 }
 
 p, li {
   color: black; /* Paragraphs and list items color */
 }
+
 
 /* Styling for links */
 a:link {
@@ -58,6 +60,9 @@ nav {
   background-color: #D0D4BA;
   padding: 10px 0;
   margin-bottom: 20px;
+  display: flex;           /* Added to make use of flexbox */
+  justify-content: space-between;  /* Pushes content to far left and right */
+  align-items: center;     /* Vertically align items to the center */
 }
 
 nav a {
@@ -103,3 +108,39 @@ nav a {
   padding: 5px;
 }
 
+/* Style for the about description */
+.about-description {
+  text-align: center;
+}
+
+/* Style for the search container */
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* This will make it take the full height of its parent, which is the body */
+}
+
+#search-box::placeholder {
+  color: grey;
+}
+
+#search-box:focus::placeholder {
+  color: transparent; /* Hide the placeholder when input is focused */
+}
+
+/* Style for the submit buttons */
+input[type="submit"] {
+  background-color: #D0D4BA;
+  color: #6B4724;
+  border: none; /* Removes the default border */
+  padding: 8px 12px; /* Gives some padding for better appearance */
+  cursor: pointer; /* Changes the cursor to a hand when hovering */
+  transition: background-color 0.3s; /* Adds smooth transition for hover effect */
+  border-radius: 5px; /* This will give the button rounded corners */
+}
+
+input[type="submit"]:hover {
+  background-color: #9AAB89;
+  color: white;
+}
