@@ -10,6 +10,9 @@ const app = express();
 const port = 8000;
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Set up a static route to serve files from the 'images' directory when accessed with '/images' URL path
+app.use('/images', express.static('images'));
+
 // Set up CSS and other static assets
 app.use(express.static(__dirname + '/public'));
 
