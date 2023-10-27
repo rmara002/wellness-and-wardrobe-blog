@@ -1,3 +1,5 @@
+/* === GLOBAL STYLES === */
+
 /* Overall body style */
 body {
   font-family: Arial, Helvetica, sans-serif;
@@ -6,119 +8,93 @@ body {
 
 h1, h2 {
   font-size: 20px;
-  color: #9AAB89; 
+  color: #9AAB89;
   text-align: center;
 }
 
 p, li {
-  color: black; /* Paragraphs and list items color */
+  color: black;
 }
 
+/* === LINKS STYLING === */
 
-/* Styling for links */
-a:link {
+a:link, a:visited {
   color: blue;
   text-decoration: none;
   padding: 5px;
 }
 
 a:visited {
-  color:  purple;
-  text-decoration: none;
-  padding: 5px;
+  color: purple;
 }
 
 a:hover {
   color: blue;
   text-decoration: underline;
-  padding: 5px;
 }
 
 a:active {
-  color: red; 
+  color: red;
   text-decoration: underline;
-  padding: 5px;
 }
 
-/* Blog Logo */
+/* === BLOG LOGO STYLING === */
+
 .logo-container {
-  display: block; /* This changes the display to block, suitable for anchor tags that contain block-level children */
-  width: 100%; /* Takes up the full width of its container */
-  text-align: center; /* Centers inline or inline-block elements horizontally */
+  display: block;
+  width: 100%;
+  text-align: center;
 }
 
 .logo-pic {
   width: 20vw;
   max-width: 1000px;
   height: auto;
-  display: inline-block; /* Displays the image inline within its container */
+  display: inline-block;
 }
 
+/* === NAVIGATION STYLES === */
 
-/* Styles for the navigation bar */
 nav {
-  background-color: #D0D4BA;
+  background-color: #A6C7B6;
   padding: 10px 0;
   margin-bottom: 20px;
-  display: flex;           /* Added to make use of flexbox */
-  justify-content: space-between;  /* Pushes content to far left and right */
-  align-items: center;     /* Vertically align items to the center */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 nav a {
   margin: 0 15px;
 }
 
-/* Styling for the navigation links */
-.nav-links:link {
-  /* Define styles for unvisited navigation links */
-  color: #6B4724; 
-  text-decoration: none;
-  padding: 5px;
-}
-
-.nav-links:visited {
-  /* Define styles for visited navigation links */
+.nav-links:link, .nav-links:visited {
   color: #6B4724;
   text-decoration: none;
   padding: 5px;
 }
 
-.nav-links:hover {
-  /* Define hover styles for navigation links */
+.nav-links:hover, .nav-links:active, .nav-links.current {
   color: white;
-  background-color: #9AAB89;
+  background-color: #B8A082;
   text-decoration: none;
   padding: 5px;
+  border-radius: 3px;
 }
 
-.nav-links:active {
-  /* Define active styles for navigation links */
-  color: white; 
-  background-color: #9AAB89;
-  text-decoration: none;
-  padding: 5px;
-}
+/* === CONTENT STYLING === */
 
-.nav-links.current {
-  /* Define styles for the current page's navigation link */
-  color: white;
-  background-color: #9AAB89;
-  text-decoration: none;
-  padding: 5px;
-}
-
-/* Style for the about description */
 .about-description {
   text-align: center;
 }
 
-/* Style for the search container */
-.search-container {
+/* === FORM STYLES === */
+
+.search-container, .login-container, .register-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%; /* This will make it take the full height of its parent, which is the body */
+  height: 100%;
 }
 
 #search-box::placeholder {
@@ -126,45 +102,24 @@ nav a {
 }
 
 #search-box:focus::placeholder {
-  color: transparent; /* Hide the placeholder when input is focused */
+  color: transparent;
 }
 
-/* Style for the submit buttons */
 input[type="submit"] {
-  background-color: #D0D4BA;
+  background-color: #A6C7B6;
   color: #6B4724;
-  border: none; /* Removes the default border */
-  padding: 8px 12px; /* Gives some padding for better appearance */
-  cursor: pointer; /* Changes the cursor to a hand when hovering */
-  transition: background-color 0.3s; /* Adds smooth transition for hover effect */
-  border-radius: 5px; /* This will give the button rounded corners */
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border-radius: 5px;
 }
 
 input[type="submit"]:hover {
-  background-color: #9AAB89;
+  background-color: #B8A082;
   color: white;
 }
 
-/* Style for the login container */
-.login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%; 
-}
-
-.login-container form {
-  text-align: center;
-}
-
-/* Style for the register container */
-.register-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%; 
-}
-
-.register-container form {
+.login-container form, .register-container form {
   text-align: center;
 }
