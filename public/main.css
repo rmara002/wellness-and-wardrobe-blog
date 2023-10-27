@@ -97,8 +97,8 @@ nav a {
 
 .nav-links.current {
   /* Define styles for the current page's navigation link */
-  color: #9AAB89;
-  background-color: white;
+  color: white;
+  background-color: #9AAB89;
   text-decoration: none;
   padding: 5px;
 }
