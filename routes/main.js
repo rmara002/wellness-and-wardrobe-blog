@@ -8,14 +8,22 @@ module.exports = function(app, blogData) {
     }
 
     // Handle our routes
-    app.get('/',function(req,res){
-        res.render('index.ejs', blogData)
+    // app.get('/', function(req, res) {
+    //     let data = Object.assign({}, blogData, { message: '', username: req.session.userId });
+    //     res.render('index.ejs', data);
+    // });
+    app.get('/', function(req, res) {
+        let message = req.query.message || '';  // Fetch message from query parameters or default to an empty string
+        let data = Object.assign({}, blogData, { message: message, username: req.session.userId });
+        res.render('index.ejs', data);
     });
     app.get('/about',function(req,res){
-        res.render('about.ejs', blogData);
+        let data = Object.assign({}, blogData, {username: req.session.userId });
+        res.render('about.ejs', data);
     });
-    app.get('/search',function(req,res){
-        res.render("search.ejs", blogData);
+    app.get('/search', function(req, res) {
+        let data = Object.assign({}, blogData, { username: req.session.userId });
+        res.render("search.ejs", data);
     });
     app.get('/search-result', function (req, res) {
         //searching in the database
@@ -33,7 +41,8 @@ module.exports = function(app, blogData) {
          });
     });
     app.get('/register', function (req,res) {
-        res.render('register.ejs', blogData);
+        let data = Object.assign({}, blogData, { username: req.session.userId });
+        res.render('register.ejs', data);
     });
     app.post('/registered', function (req,res) {
         const saltRounds = 10;
@@ -74,31 +83,28 @@ module.exports = function(app, blogData) {
         });
     });
     app.get('/login', function(req, res) {
-        res.render('login.ejs', blogData);
+        let data = Object.assign({}, blogData, { username: req.session.userId });
+        res.render('login.ejs', data);
     });
     app.post('/loggedin', function(req, res) {
         let sqlquery = "SELECT hashedPassword FROM users WHERE username = ?";
         let username = req.body.username;
-
         db.query(sqlquery, [username], (err, result) => {
             if (err) {
-                return res.render('index', { siteName: blogData.siteName, message: "Error during login." });
+                return res.render('index', { siteName: blogData.siteName, message: "Error during login.", username: req.session.userId });
             }
-
             if (result.length === 0) {
-                return res.render('index', { siteName: blogData.siteName, message: "No such user found." });
+                return res.render('index', { siteName: blogData.siteName, message: "No such user found.", username: req.session.userId });
             }
-
             bcrypt.compare(req.body.password, result[0].hashedPassword, function(err, isMatch) {
                 if (err) {
-                    return res.render('index', { siteName: blogData.siteName, message: "Error during password comparison." });
+                    return res.render('index', { siteName: blogData.siteName, message: "Error during password comparison.", username: req.session.userId });
                 }
-
                 if (isMatch) {
                     req.session.userId = req.body.username;
-                    res.render('index', { siteName: blogData.siteName, message: `Login successful! Welcome to ${blogData.siteName}` });
+                    res.render('index', { siteName: blogData.siteName, username: req.session.userId, message: `Login successful! Welcome to ${blogData.siteName}.` });
                 } else {
-                    res.render('index', { siteName: blogData.siteName, message: "Wrong username or password." });
+                    res.render('index', { siteName: blogData.siteName, message: "Wrong username or password.", username: req.session.userId });
                 }
             });
         });
@@ -120,12 +126,12 @@ module.exports = function(app, blogData) {
             }
         });
     });
-    app.get('/logout', redirectLogin, (req,res) => {
+    app.get('/logout', redirectLogin, (req, res) => {
         req.session.destroy(err => {
-        if (err) {
-          return res.redirect('./')
-        }
-        res.send('you are now logged out. <a href='+'./'+'>Home</a>');
+            if (err) {
+                return res.redirect('./');
+            }
+            res.redirect('/?message=You are now logged out.');
         });
     });
 }
