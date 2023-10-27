@@ -1,43 +1,105 @@
-h1 {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 20px;
-    color: darkcyan;
+/* Overall body style */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: white; 
 }
 
-h2 {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 20px;
-    color: cadetblue;
+h1, h2 {
+  font-size: 20px;
+  color: #9AAB89; 
 }
 
-p,li {
-    font-family: Arial, Helvetica, sans-serif;
+p, li {
+  color: black; /* Paragraphs and list items color */
 }
 
+/* Styling for links */
 a:link {
-    color: orangered;
-    text-decoration: none;
-    padding:5px;
-  }
-  
-  /* visited link */
-  a:visited {
-    color: tomato;
-    text-decoration: none;
-    padding:5px;
-  }
-  
-  /* mouse over link */
-  a:hover {
-    color: white;
-    text-decoration: none;
-    background-color: orangered;
-    padding:5px;
-  }
-  
-  /* selected link */
-  a:active {
-    color: blue;
-    text-decoration: none;
-    padding:5px;
-  }
+  color: blue;
+  text-decoration: none;
+  padding: 5px;
+}
+
+a:visited {
+  color:  purple;
+  text-decoration: none;
+  padding: 5px;
+}
+
+a:hover {
+  color: blue;
+  text-decoration: underline;
+  padding: 5px;
+}
+
+a:active {
+  color: red; 
+  text-decoration: underline;
+  padding: 5px;
+}
+
+/* Blog Logo */
+.logo-container {
+  display: block; /* This changes the display to block, suitable for anchor tags that contain block-level children */
+  width: 100%; /* Takes up the full width of its container */
+  text-align: center; /* Centers inline or inline-block elements horizontally */
+}
+
+.logo-pic {
+  width: 20vw;
+  max-width: 1000px;
+  height: auto;
+  display: inline-block; /* Displays the image inline within its container */
+}
+
+
+/* Styles for the navigation bar */
+nav {
+  background-color: #D0D4BA;
+  padding: 10px 0;
+  margin-bottom: 20px;
+}
+
+nav a {
+  margin: 0 15px;
+}
+
+/* Styling for the navigation links */
+.nav-links:link {
+  /* Define styles for unvisited navigation links */
+  color: #6B4724; 
+  text-decoration: none;
+  padding: 5px;
+}
+
+.nav-links:visited {
+  /* Define styles for visited navigation links */
+  color: #6B4724;
+  text-decoration: none;
+  padding: 5px;
+}
+
+.nav-links:hover {
+  /* Define hover styles for navigation links */
+  color: white;
+  background-color: #9AAB89;
+  text-decoration: none;
+  padding: 5px;
+}
+
+.nav-links:active {
+  /* Define active styles for navigation links */
+  color: white; 
+  background-color: #9AAB89;
+  text-decoration: none;
+  padding: 5px;
+}
+
+.nav-links.current {
+  /* Define styles for the current page's navigation link */
+  color: #9AAB89;
+  background-color: white;
+  text-decoration: none;
+  padding: 5px;
+}
+
