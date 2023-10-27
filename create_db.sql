@@ -6,7 +6,9 @@ USE myBlog;
 CREATE TABLE users (
     id INT AUTO_INCREMENT,
     username VARCHAR(50),
-    password VARCHAR(255),
+    password hashedPassword VARCHAR(255);
+    first_name VARCHAR(255);
+    last_name VARCHAR(255);
     email VARCHAR(255),
     bio TEXT,
     profile_picture VARCHAR(255),
