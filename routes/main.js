@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 
-module.exports = function(app, shopData) {
+module.exports = function(app, blogData) {
     const redirectLogin = (req, res, next) => {
         if (!req.session.userId ) {
           res.redirect('./login')
@@ -9,13 +9,13 @@ module.exports = function(app, shopData) {
 
     // Handle our routes
     app.get('/',function(req,res){
-        res.render('index.ejs', shopData)
+        res.render('index.ejs', blogData)
     });
     app.get('/about',function(req,res){
-        res.render('about.ejs', shopData);
+        res.render('about.ejs', blogData);
     });
     app.get('/search',function(req,res){
-        res.render("search.ejs", shopData);
+        res.render("search.ejs", blogData);
     });
     app.get('/search-result', function (req, res) {
         //searching in the database
@@ -27,13 +27,13 @@ module.exports = function(app, shopData) {
             if (err) {
                 res.redirect('./');
             }
-            let newData = Object.assign({}, shopData, {availableBooks:result});
+            let newData = Object.assign({}, blogData, {availableBooks:result});
             console.log(newData)
             res.render("list.ejs", newData)
          });
     });
     app.get('/register', function (req,res) {
-        res.render('register.ejs', shopData);
+        res.render('register.ejs', blogData);
     });
     app.post('/registered', function (req,res) {
         const saltRounds = 10;
@@ -68,42 +68,43 @@ module.exports = function(app, shopData) {
             if (err) {
                 res.redirect('./');
             }
-            let userData = Object.assign({}, shopData, { users: result });
+            let userData = Object.assign({}, blogData, { users: result });
             console.log(userData)
             res.render("listusers.ejs", userData)
         });
     });
     app.get('/login', function(req, res) {
-        res.render('login.ejs', shopData);
+        res.render('login.ejs', blogData);
     });
     app.post('/loggedin', function(req, res) {
         let sqlquery = "SELECT hashedPassword FROM users WHERE username = ?";
         let username = req.body.username;
-        // Query the database to find the hashed password associated with the username
+
         db.query(sqlquery, [username], (err, result) => {
             if (err) {
-                return res.status(500).send('Error during login.');
+                return res.render('index', { siteName: blogData.siteName, message: "Error during login." });
             }
-            if (result.length === 0) { // No user found
-                return res.send('No such user found.');
+
+            if (result.length === 0) {
+                return res.render('index', { siteName: blogData.siteName, message: "No such user found." });
             }
-            // Compare the input password with the stored hashed password using bcrypt
+
             bcrypt.compare(req.body.password, result[0].hashedPassword, function(err, isMatch) {
                 if (err) {
-                    return res.status(500).send('Error during password comparison.');
+                    return res.render('index', { siteName: blogData.siteName, message: "Error during password comparison." });
                 }
+
                 if (isMatch) {
-                    // Save user session here, when login is successful
                     req.session.userId = req.body.username;
-                    res.send('Login successful! <a href=' + './' + '>Home</a>');
+                    res.render('index', { siteName: blogData.siteName, message: `Login successful! Welcome to ${blogData.siteName}` });
                 } else {
-                    res.send('Wrong username or password.');
+                    res.render('index', { siteName: blogData.siteName, message: "Wrong username or password." });
                 }
             });
         });
     });
     app.get('/deleteuser', redirectLogin, function (req, res) {
-        res.render('deleteuser.ejs', shopData);
+        res.render('deleteuser.ejs', blogData);
     });
     app.post('/userdeleted', function (req, res) {
         let username = req.body.username;
