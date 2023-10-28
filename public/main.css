@@ -1,6 +1,4 @@
 /* === GLOBAL STYLES === */
-
-/* Overall body style */
 body {
   font-family: Arial, Helvetica, sans-serif;
   background-color: white; 
@@ -17,7 +15,6 @@ p, li {
 }
 
 /* === LINKS STYLING === */
-
 a:link, a:visited {
   color: blue;
   text-decoration: none;
@@ -38,23 +35,7 @@ a:active {
   text-decoration: underline;
 }
 
-/* === BLOG LOGO STYLING === */
-
-.logo-container {
-  display: block;
-  width: 100%;
-  text-align: center;
-}
-
-.logo-pic {
-  width: 20vw;
-  max-width: 1000px;
-  height: auto;
-  display: inline-block;
-}
-
 /* === NAVIGATION STYLES === */
-
 nav {
   background-color: #A6C7B6;
   padding: 10px 0;
@@ -82,19 +63,40 @@ nav a {
   border-radius: 3px;
 }
 
-/* === CONTENT STYLING === */
+/* === BLOG LOGO STYLING === */
+.logo-container {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
 
+.logo-pic {
+  width: 20vw;
+  max-width: 1000px;
+  height: auto;
+  display: inline-block;
+}
+
+/* === CONTENT STYLING === */
 .about-description {
   text-align: center;
 }
 
-/* === FORM STYLES === */
-
-.search-container, .login-container, .register-container {
+/* === SEARCH CONTAINER STYLES === */
+.search-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
+}
+
+#search-box {
+  height: calc(1em + 16px);
+  border: none;
+  padding-left: 12px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 300px;
 }
 
 #search-box::placeholder {
@@ -120,6 +122,72 @@ input[type="submit"]:hover {
   color: white;
 }
 
-.login-container form, .register-container form {
+.search-blog {
   text-align: center;
+}
+
+/* === LOGIN CONTAINER STYLES === */
+.login-container {
+  max-width: 500px;
+  margin: 0 auto;
+  border: none;
+  padding: 20px;
+}
+
+.login-container p {
+  margin-bottom: 15px; 
+}
+
+.login-container input[type="text"], .login-container input[type="password"] {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+}
+
+.login-container input[type="submit"] {
+  width: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+/* === REGISTER CONTAINER STYLES === */
+.register-container {
+  max-width: 500px;
+  margin: 0 auto;
+  border: none;
+  padding: 20px;
+}
+
+.register-container label, .register-container input {
+  display: block;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.register-container label {
+  text-align: left;
+}
+
+.register-container input[type="text"], .register-container input[type="email"], .register-container input[type="password"] {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.register-container input[type="submit"] {
+  width: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.toggle-password {
+  margin-left: 5px; 
+  color: grey;
+  cursor: pointer;
+  user-select: none; 
+  font-size: 0.8em;
 }
