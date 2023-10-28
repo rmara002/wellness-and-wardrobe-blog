@@ -74,7 +74,8 @@
         <label for="password">Password:</label>
         <input id="password" type="password" name="password" placeholder="Password"
           pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,}" required
-          title="Must contain at least one number, one uppercase and lowercase letter, one special character, and at least 8 or more characters" />
+          title="Must contain at least one number, one uppercase and lowercase letter, one special character, and at least 8 or more characters"
+          oncopy="return false;" />
         <span onclick="togglePasswordVisibility()" id="passwordToggle" class="toggle-password">Show Password</span>
         <!-- Set to "Show" by default -->
       </p>
@@ -97,7 +98,8 @@
 
       <p>
         <label for="confirm-password">Confirm Password:</label>
-        <input id="confirm-password" type="password" name="confirm-password" placeholder="Confirm Password" required />
+        <input id="confirm-password" type="password" name="confirm-password" placeholder="Confirm Password" required
+          oncopy="return false;" />
         <span onclick="toggleConfirmPasswordVisibility()" id="confirmPasswordToggle" class="toggle-password">Show
           Password</span>
       </p>
@@ -117,6 +119,15 @@
           }
         }
       </script>
+
+      <!-- Add this just before the submit button -->
+      <div class="register-error-message">
+        <% if (typeof message !=='undefined' && message) { %>
+          <span>
+            <%= message %>
+          </span>
+          <% } %>
+      </div>
 
       <input type="submit" value="Register" />
     </form>
