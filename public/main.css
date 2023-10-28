@@ -184,6 +184,11 @@ input[type="submit"]:hover {
   margin: 0 auto;
 }
 
+.register-error-message {
+  color: red;
+  margin-bottom: 10px;
+}
+
 .toggle-password {
   margin-left: 5px; 
   color: grey;
@@ -191,3 +196,4 @@ input[type="submit"]:hover {
   user-select: none; 
   font-size: 0.8em;
 }
+
