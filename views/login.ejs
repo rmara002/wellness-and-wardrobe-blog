@@ -1,39 +1,67 @@
 <!doctype html>
 <html>
+
 <head>
-    <title>Login to <%=siteName%></title>
-    <link rel="stylesheet" type="text/css" href="/main.css" />
+  <title>Login to <%=siteName%>
+  </title>
+  <link rel="stylesheet" type="text/css" href="/main.css" />
 </head>
+
 <body>
-    <!-- Add the image at the top -->
-    <div class="logo-container"><img src="../images/blog logo.png" alt="Blog Website Logo" class="logo-pic"></div>
+  <!-- Add the image at the top -->
+  <div class="logo-container"><img src="../images/blog logo.png" alt="Blog Website Logo" class="logo-pic"></div>
 
-    <!-- Add the navigation bar -->
-    <nav>
-      <div> <!-- New wrapping div for the left links -->
-        <a href="/" class="nav-links">Home</a>
-        <a href="about" class="nav-links">About <%=siteName%></a>
-        <a href="search" class="nav-links">Search</a>
-      </div> <!-- End of wrapping div for the left links -->
-    
-      <div> <!-- New wrapping div for the right links -->
-        <% if (!username) { %> <!-- If there's no username, show the Login and Register links -->
-          <a href="login" class="nav-links">Login</a>
-          <a href="register" class="nav-links">Register</a>
-        <% } else { %> <!-- If there's a username, show the username and the Logout link, and remove the Login and Register links -->
-          <span class="nav-links"><%= username %></span>
+  <!-- Add the navigation bar -->
+  <nav>
+    <div> <!-- New wrapping div for the left links -->
+      <a href="/" class="nav-links">Home</a>
+      <a href="about" class="nav-links">About <%=siteName%></a>
+      <a href="search" class="nav-links">Search</a>
+    </div> <!-- End of wrapping div for the left links -->
+
+    <div> <!-- New wrapping div for the right links -->
+      <% if (!username) { %> <!-- If there's no username, show the Login and Register links -->
+        <a href="login" class="nav-links">Login</a>
+        <a href="register" class="nav-links">Register</a>
+        <% } else { %>
+          <!-- If there's a username, show the username and the Logout link, and remove the Login and Register links -->
+          <span class="nav-links">
+            <%= username %>
+          </span>
           <a href="logout" class="nav-links">Logout</a>
-        <% } %>
-      </div> <!-- End of wrapping div for the right links -->
-    </nav>
+          <% } %>
+    </div> <!-- End of wrapping div for the right links -->
+  </nav>
 
-    <h1>Login to <%=siteName%></h1>
-    <div class="login-container">
+  <h1>Login to <%=siteName%>
+  </h1>
+  <div class="login-container">
     <form method="POST" action="/loggedin">
-        <p>Username: <input id="username" type="text" name="username" required /></p>
-        <p>Password: <input id="password" type="password" name="password" required /></p>
-        <input type="submit" value="Login" />
+      <p>Username: <input id="username" type="text" name="username" required /></p>
+      <p>Password:
+        <input id="login-password" type="password" name="password" required />
+        <span onclick="toggleLoginPasswordVisibility()" id="loginPasswordToggle" class="toggle-password">Show
+          Password</span>
+      </p>
+      <input type="submit" value="Login" />
     </form>
-    </div>
+  </div>
+
+  <script>
+    function toggleLoginPasswordVisibility() {
+      const loginPasswordInput = document.getElementById('login-password');
+      const loginPasswordToggle = document.getElementById('loginPasswordToggle');
+      const typeAttribute = loginPasswordInput.getAttribute('type');
+
+      if (typeAttribute === 'password') {
+        loginPasswordInput.setAttribute('type', 'text');
+        loginPasswordToggle.textContent = 'Hide';
+      } else {
+        loginPasswordInput.setAttribute('type', 'password');
+        loginPasswordToggle.textContent = 'Show Password';
+      }
+    }
+  </script>
 </body>
+
 </html>
