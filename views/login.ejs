@@ -39,7 +39,7 @@
     <form method="POST" action="/loggedin">
       <p>Username: <input id="username" type="text" name="username" required /></p>
       <p>Password:
-        <input id="login-password" type="password" name="password" required />
+        <input id="login-password" type="password" name="password" required oncopy="return false;"/>
         <span onclick="toggleLoginPasswordVisibility()" id="loginPasswordToggle" class="toggle-password">Show
           Password</span>
       </p>
