@@ -1,44 +1,126 @@
 <!doctype html>
 <html>
-  <head>
-    <title>Register for <%=siteName%></title>
-    <link rel="stylesheet"  type="text/css" href="/main.css" />
-  </head>
-  <body>
-    <!-- Add the image at the top -->
-    <div class="logo-container"><img src="../images/blog logo.png" alt="Blog Website Logo" class="logo-pic"></div>
 
-    <!-- Add the navigation bar -->
-    <nav>
-      <div> <!-- New wrapping div for the left links -->
-        <a href="/" class="nav-links">Home</a>
-        <a href="about" class="nav-links">About <%=siteName%></a>
-        <a href="search" class="nav-links">Search</a>
-      </div> <!-- End of wrapping div for the left links -->
-    
-      <div> <!-- New wrapping div for the right links -->
-        <% if (!username) { %> <!-- If there's no username, show the Login and Register links -->
-          <a href="login" class="nav-links">Login</a>
-          <a href="register" class="nav-links">Register</a>
-        <% } else { %> <!-- If there's a username, show the username and the Logout link, and remove the Login and Register links -->
-          <span class="nav-links"><%= username %></span>
+<head>
+  <title>Register for <%=siteName%>
+  </title>
+  <link rel="stylesheet" type="text/css" href="/main.css" />
+</head>
+
+<body>
+  <!-- Add the image at the top -->
+  <div class="logo-container"><img src="../images/blog logo.png" alt="Blog Website Logo" class="logo-pic"></div>
+
+  <!-- Add the navigation bar -->
+  <nav>
+    <div> <!-- New wrapping div for the left links -->
+      <a href="/" class="nav-links">Home</a>
+      <a href="about" class="nav-links">About <%=siteName%></a>
+      <a href="search" class="nav-links">Search</a>
+    </div> <!-- End of wrapping div for the left links -->
+
+    <div> <!-- New wrapping div for the right links -->
+      <% if (!username) { %> <!-- If there's no username, show the Login and Register links -->
+        <a href="login" class="nav-links">Login</a>
+        <a href="register" class="nav-links">Register</a>
+        <% } else { %>
+          <!-- If there's a username, show the username and the Logout link, and remove the Login and Register links -->
+          <span class="nav-links">
+            <%= username %>
+          </span>
           <a href="logout" class="nav-links">Logout</a>
-        <% } %>
-      </div> <!-- End of wrapping div for the right links -->
-    </nav>
+          <% } %>
+    </div> <!-- End of wrapping div for the right links -->
+  </nav>
 
-    <h1>Register for <%=siteName%></h1>
-    <div class="register-container">
+  <h1>Register for <%=siteName%>
+  </h1>
+  <div class="register-container">
     <form method="POST" action="/registered">
-        <p>First name: <input id="first" type="text" name="first" placeholder="first name" /></p>
-        <p>Last name: <input id="last" type="text" name="last" placeholder="last name" /></p>
-        <p>Email: <input id="email" type="email" name="email" placeholder="email" /></p>
-         <!-- Add a username input field here -->
-         <p>Username: <input id="username" type="text" name="username" placeholder="username" /></p>
-         <!-- Add a password input field here -->
-         <p>Password: <input id="password" type="password" name="password" /></p>
-        <input type="submit" value="Register" />
+      <p>
+        <label for="first">First name:</label>
+        <input id="first" type="text" name="first" placeholder="First Name" required autofocus />
+      </p>
+
+      <p>
+        <label for="last">Last name:</label>
+        <input id="last" type="text" name="last" placeholder="Last Name" required />
+      </p>
+
+      <p>
+        <label for="email">Email:</label>
+        <input id="email" type="email" name="email" placeholder="email@example.com" required
+          oninput="validateEmail(this)" />
+      </p>
+
+      <script>
+        function validateEmail(input) {
+          if (input.value === "") {
+            input.setCustomValidity("Please provide an email address.");
+          } else if (!input.value.includes("@") || !input.value.endsWith(".com")) {
+            input.setCustomValidity("Must contain an '@' and end with '.com'");
+          } else {
+            input.setCustomValidity(""); // clear any previous error message
+          }
+        }
+      </script>
+
+      <p>
+        <label for="username">Username:</label>
+        <input id="username" type="text" name="username" placeholder="Username" required />
+      </p>
+
+      <p>
+        <label for="password">Password:</label>
+        <input id="password" type="password" name="password" placeholder="Password"
+          pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,}" required
+          title="Must contain at least one number, one uppercase and lowercase letter, one special character, and at least 8 or more characters" />
+        <span onclick="togglePasswordVisibility()" id="passwordToggle" class="toggle-password">Show Password</span>
+        <!-- Set to "Show" by default -->
+      </p>
+
+      <script>
+        function togglePasswordVisibility() {
+          const passwordInput = document.getElementById('password');
+          const passwordToggle = document.getElementById('passwordToggle');
+          const typeAttribute = passwordInput.getAttribute('type');
+
+          if (typeAttribute === 'password') {
+            passwordInput.setAttribute('type', 'text');
+            passwordToggle.textContent = 'Hide';
+          } else {
+            passwordInput.setAttribute('type', 'password');
+            passwordToggle.textContent = 'Show Password';
+          }
+        }
+      </script>
+
+      <p>
+        <label for="confirm-password">Confirm Password:</label>
+        <input id="confirm-password" type="password" name="confirm-password" placeholder="Confirm Password" required />
+        <span onclick="toggleConfirmPasswordVisibility()" id="confirmPasswordToggle" class="toggle-password">Show
+          Password</span>
+      </p>
+
+      <script>
+        function toggleConfirmPasswordVisibility() {
+          const confirmPasswordInput = document.getElementById('confirm-password');
+          const confirmPasswordToggle = document.getElementById('confirmPasswordToggle');
+          const typeAttribute = confirmPasswordInput.getAttribute('type');
+
+          if (typeAttribute === 'password') {
+            confirmPasswordInput.setAttribute('type', 'text');
+            confirmPasswordToggle.textContent = 'Hide';
+          } else {
+            confirmPasswordInput.setAttribute('type', 'password');
+            confirmPasswordToggle.textContent = 'Show Password';
+          }
+        }
+      </script>
+
+      <input type="submit" value="Register" />
     </form>
-    </div>
-  </body>
+  </div>
+</body>
+
 </html>
