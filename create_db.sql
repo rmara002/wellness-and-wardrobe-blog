@@ -5,11 +5,11 @@ USE myBlog;
 -- Users table
 CREATE TABLE users (
     id INT AUTO_INCREMENT,
-    username VARCHAR(50),
+    username VARCHAR(50) UNIQUE,
     password hashedPassword VARCHAR(255);
     first_name VARCHAR(255);
     last_name VARCHAR(255);
-    email VARCHAR(255),
+    email VARCHAR(255) UNIQUE,
     bio TEXT,
     profile_picture VARCHAR(255),
     PRIMARY KEY(id)
