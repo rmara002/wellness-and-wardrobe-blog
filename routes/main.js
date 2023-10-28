@@ -53,24 +53,29 @@ module.exports = function(app, blogData) {
         bcrypt.hash(plainPassword, saltRounds, function(err, hashedPassword) {
             if (err) {
                 // Handle error appropriately
-                const errorMessage = encodeURIComponent('Error hashing password.');
-                return res.redirect(`/?message=${errorMessage}`);
+                const errorMessage = 'Error hashing password.';
+                return res.render('register', { message: errorMessage });
             }
             // Create SQL query to insert user data into the users table
             let sqlquery = "INSERT INTO users (username, first_name, last_name, email, hashedPassword) VALUES (?,?,?,?,?)";
-            // Prepare the record to be inserted
             let newrecord = [req.body.username, req.body.first, req.body.last, req.body.email, hashedPassword];
             // Execute the SQL query
             db.query(sqlquery, newrecord, (err, result) => {
                 if (err) {
-                    // Handle the error appropriately
-                    const errorMessage = encodeURIComponent('Error registering user.');
-                    return res.redirect(`/?message=${errorMessage}`);
+                    if (err.code == 'ER_DUP_ENTRY') {
+                        // Duplicate entry error
+                        let errorMessage = 'Username or email already exists. Please choose another.';
+                        return res.render('register', { message: errorMessage, siteName: blogData.siteName, username: req.session.userId });
+                    } else {
+                        // Handle other errors
+                        let errorMessage = 'Error registering user.';
+                        return res.render('register', { message: errorMessage });
+                    }
                 }
                 // Set session variable for new user
                 req.session.newUser = `${req.body.first} ${req.body.last}`;
                 // Inform the user of successful registration
-                const successMessage = encodeURIComponent('Registration successful! Login to start blogging.');
+                const successMessage = 'Registration successful! Login to start blogging.';
                 res.redirect(`/?message=${successMessage}`);
             });
         });
