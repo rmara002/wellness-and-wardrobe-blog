@@ -13,9 +13,11 @@ module.exports = function(app, blogData) {
     //     res.render('index.ejs', data);
     // });
     app.get('/', function(req, res) {
-        let message = req.query.message || '';  // Fetch message from query parameters or default to an empty string
-        let data = Object.assign({}, blogData, { message: message, username: req.session.userId });
+        let message = req.query.message || '';  
+        let data = Object.assign({}, blogData, { message: message, username: req.session.userId, newUser: req.session.newUser });
         res.render('index.ejs', data);
+        req.session.newUser = null; // Clear the newUser variable after rendering the page
+        req.session.save(); // Make sure to save the session after modifying it
     });
     app.get('/about',function(req,res){
         let data = Object.assign({}, blogData, {username: req.session.userId });
@@ -44,14 +46,15 @@ module.exports = function(app, blogData) {
         let data = Object.assign({}, blogData, { username: req.session.userId });
         res.render('register.ejs', data);
     });
-    app.post('/registered', function (req,res) {
+    app.post('/registered', function (req, res) {
         const saltRounds = 10;
         const plainPassword = req.body.password;
         // Hash the password before saving it
         bcrypt.hash(plainPassword, saltRounds, function(err, hashedPassword) {
             if (err) {
                 // Handle error appropriately
-                return res.status(500).send('Error hashing password.');
+                const errorMessage = encodeURIComponent('Error hashing password.');
+                return res.redirect(`/?message=${errorMessage}`);
             }
             // Create SQL query to insert user data into the users table
             let sqlquery = "INSERT INTO users (username, first_name, last_name, email, hashedPassword) VALUES (?,?,?,?,?)";
@@ -61,12 +64,14 @@ module.exports = function(app, blogData) {
             db.query(sqlquery, newrecord, (err, result) => {
                 if (err) {
                     // Handle the error appropriately
-                    return res.status(500).send('Error registering user.');
+                    const errorMessage = encodeURIComponent('Error registering user.');
+                    return res.redirect(`/?message=${errorMessage}`);
                 }
+                // Set session variable for new user
+                req.session.newUser = `${req.body.first} ${req.body.last}`;
                 // Inform the user of successful registration
-                let responseText = 'Hello '+ req.body.first + ' '+ req.body.last +' you are now registered!  We will send an email to you at ' + req.body.email;
-                responseText += ' Your password is: '+ plainPassword +' and your hashed password is: '+ hashedPassword;
-                res.send(responseText);
+                const successMessage = encodeURIComponent('Registration successful! Login to start blogging.');
+                res.redirect(`/?message=${successMessage}`);
             });
         });
     });
