@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+<head>
+    <title><%= post.title %> - <%= siteName %></title>
+    <link rel="stylesheet" type="text/css" href="/main.css" />
+</head>
+<body>
+   <!-- Add the image at the top -->
+   <div class="logo-container"><img src="../images/blog logo.png" alt="Blog Website Logo" class="logo-pic"></div>
+
+   <!-- Add the navigation bar -->
+<nav>
+   <div> <!-- New wrapping div for the left links -->
+       <a href="/" class="nav-links">Home</a>
+       <a href="about" class="nav-links">About <%=siteName%></a>
+       
+       <!-- Navigation link with dropdowns -->
+       <div class="dropdown">
+           <a href="/blog" class="nav-links">Blog</a>
+           <div class="dropdown-content">
+               <a href="/blog">All Blog Posts</a>
+               <% categories.forEach(category => { %>
+                   <a href="/blog?category=<%= category.id %>"><%= category.name %></a>
+               <% }); %>
+               <a href="/create-blog">Create a Blog</a>
+           </div>
+       </div>
+
+       <a href="search" class="nav-links">Search</a>
+   </div> <!-- End of wrapping div for the left links -->
+   
+   <div> <!-- New wrapping div for the right links -->
+       <% if (!username) { %> <!-- If there's no username, show the Login and Register links -->
+           <a href="login" class="nav-links">Login</a>
+           <a href="register" class="nav-links">Register</a>
+       <% } else { %> <!-- If there's a username, show the username and the Logout link, and remove the Login and Register links -->
+           <span class="nav-links"><%= username %></span>
+           <a href="logout" class="nav-links">Logout</a>
+       <% } %>
+   </div> <!-- End of wrapping div for the right links -->
+</nav>
+
+
+    <div class="post-container">
+        <h1><%= post.title %></h1>
+        <p>By: <%= post.username %> on <%= new Date(post.created_at).toLocaleString() %></p>
+        <div><%= post.content %></div> <!-- Display the full content -->
+        
+        <!-- Display tags -->
+        <% if(post.tags) { %>
+            <div>
+                <% post.tags.split(', ').forEach(tag => { %>
+                    <a href="/tag/<%= tag %>" class="tag-link"><%= tag %></a>
+                <% }); %>
+            </div>
+        <% } %>
+    </div>
+
+    <!-- The rest of your HTML content -->
+</body>
+</html>
