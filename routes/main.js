@@ -2,32 +2,50 @@ const bcrypt = require('bcrypt');
 
 module.exports = function(app, blogData) {
     const redirectLogin = (req, res, next) => {
-        if (!req.session.userId ) {
+        if (!req.session.userId) {
           res.redirect('./login')
         } else { next (); }
     }
 
-    // Handle our routes
-    // app.get('/', function(req, res) {
-    //     let data = Object.assign({}, blogData, { message: '', username: req.session.userId });
-    //     res.render('index.ejs', data);
-    // });
-    app.get('/', function(req, res) {
-        let message = req.query.message || '';  
-        let data = Object.assign({}, blogData, { message: message, username: req.session.userId, newUser: req.session.newUser });
-        res.render('index.ejs', data);
+    //Handle our routes
+    const fetchCategories = (req, res, next) => {
+        let categoryQuery = "SELECT * FROM categories";
+        db.query(categoryQuery, (err, categories) => {
+            if (err) {
+                // Handle the error appropriately
+                console.error("Error fetching categories:", err);
+                return next(err);
+            }
+            res.locals.categories = categories;
+            next();
+        });
+    };
+    
+        app.get('/', fetchCategories, function(req, res) {
+        let message = req.query.message || '';
+        let data = Object.assign({}, blogData, { message: message, username: req.session.username, newUser: req.session.newUser });
+    
         req.session.newUser = null; // Clear the newUser variable after rendering the page
         req.session.save(); // Make sure to save the session after modifying it
+    
+        // Fetch categories
+        let categoryQuery = "SELECT * FROM categories";
+        db.query(categoryQuery, (err, categories) => {
+            if (err) throw err;
+            data.categories = categories; // Assign categories to the data object
+            res.render('index.ejs', data); // Render the template with the categories data
+        });
     });
-    app.get('/about',function(req,res){
-        let data = Object.assign({}, blogData, {username: req.session.userId });
+    
+    app.get('/about', fetchCategories, function(req,res){
+        let data = Object.assign({}, blogData, {username: req.session.username });
         res.render('about.ejs', data);
     });
-    app.get('/search', function(req, res) {
-        let data = Object.assign({}, blogData, { username: req.session.userId });
+    app.get('/search', fetchCategories, function(req, res) {
+        let data = Object.assign({}, blogData, { username: req.session.username });
         res.render("search.ejs", data);
     });
-    app.get('/search-result', function (req, res) {
+    app.get('/search-result', fetchCategories, function (req, res) {
         //searching in the database
         //res.send("You searched for: " + req.query.keyword);
 
@@ -42,11 +60,11 @@ module.exports = function(app, blogData) {
             res.render("list.ejs", newData)
          });
     });
-    app.get('/register', function (req,res) {
-        let data = Object.assign({}, blogData, { username: req.session.userId });
+    app.get('/register', fetchCategories, function (req,res) {
+        let data = Object.assign({}, blogData, { username: req.session.username });
         res.render('register.ejs', data);
     });
-    app.post('/registered', function (req, res) {
+    app.post('/registered', fetchCategories, function (req, res) {
         const saltRounds = 10;
         const plainPassword = req.body.password;
         // Hash the password before saving it
@@ -65,7 +83,7 @@ module.exports = function(app, blogData) {
                     if (err.code == 'ER_DUP_ENTRY') {
                         // Duplicate entry error
                         let errorMessage = 'Username or email already exists. Please choose another.';
-                        return res.render('register', { message: errorMessage, siteName: blogData.siteName, username: req.session.userId });
+                        return res.render('register', { message: errorMessage, siteName: blogData.siteName, username: req.session.username });
                     } else {
                         // Handle other errors
                         let errorMessage = 'Error registering user.';
@@ -92,29 +110,33 @@ module.exports = function(app, blogData) {
             res.render("listusers.ejs", userData)
         });
     });
-    app.get('/login', function(req, res) {
-        let data = Object.assign({}, blogData, { username: req.session.userId });
+    app.get('/login', fetchCategories, function(req, res) {
+        let data = Object.assign({}, blogData, { username: req.session.username });
         res.render('login.ejs', data);
     });
-    app.post('/loggedin', function(req, res) {
-        let sqlquery = "SELECT hashedPassword FROM users WHERE username = ?";
+    app.post('/loggedin', fetchCategories, function(req, res) {
+        let sqlquery = "SELECT id, hashedPassword FROM users WHERE username = ?";
         let username = req.body.username;
+
         db.query(sqlquery, [username], (err, result) => {
             if (err) {
-                return res.render('index', { siteName: blogData.siteName, message: "Error during login.", username: req.session.userId });
+                return res.render('index', { siteName: blogData.siteName, message: "Error during login.", username: req.session.username });
             }
             if (result.length === 0) {
-                return res.render('index', { siteName: blogData.siteName, message: "No such user found.", username: req.session.userId });
+                return res.render('index', { siteName: blogData.siteName, message: "No such user found.", username: req.session.username });
             }
             bcrypt.compare(req.body.password, result[0].hashedPassword, function(err, isMatch) {
                 if (err) {
-                    return res.render('index', { siteName: blogData.siteName, message: "Error during password comparison.", username: req.session.userId });
+                    return res.render('index', { siteName: blogData.siteName, message: "Error during password comparison.", username: req.session.username });
                 }
                 if (isMatch) {
-                    req.session.userId = req.body.username;
-                    res.render('index', { siteName: blogData.siteName, username: req.session.userId, message: `Login successful! Welcome to ${blogData.siteName}.` });
+                    req.session.userId = result[0].id; // Store user ID
+                    req.session.username = username;   // Store username
+
+                // Render the index page with the username for display
+                res.render('index', { siteName: blogData.siteName, username: username, message: `Login successful! Welcome to ${blogData.siteName}.` });
                 } else {
-                    res.render('index', { siteName: blogData.siteName, message: "Wrong username or password.", username: req.session.userId });
+                    res.render('index', { siteName: blogData.siteName, message: "Wrong username or password.", username: req.session.username });
                 }
             });
         });
@@ -136,7 +158,7 @@ module.exports = function(app, blogData) {
             }
         });
     });
-    app.get('/logout', redirectLogin, (req, res) => {
+    app.get('/logout', fetchCategories, redirectLogin, (req, res) => {
         req.session.destroy(err => {
             if (err) {
                 return res.redirect('./');
@@ -144,4 +166,116 @@ module.exports = function(app, blogData) {
             res.redirect('/?message=You are now logged out.');
         });
     });
+
+app.get('/blog', fetchCategories, function(req, res) {
+    let category = req.query.category || null;
+    // Initialize categoryName here to ensure it's in the right scope
+    let categoryName = 'All Blog Posts'; // Default title for no specific category
+
+    let sqlQuery = `
+        SELECT p.id, p.title, p.content, p.created_at, u.username, GROUP_CONCAT(t.name SEPARATOR ', ') AS tags
+        FROM posts p
+        JOIN users u ON p.user_id = u.id
+        LEFT JOIN post_tags pt ON p.id = pt.post_id
+        LEFT JOIN tags t ON pt.tag_id = t.id
+        LEFT JOIN categories c ON p.category_id = c.id
+    `;
+
+    if (category) {
+        sqlQuery += " WHERE c.id = ?";
+        // Update categoryName based on the category ID
+        if (category === '1') {
+            categoryName = 'Fashion Blogs';
+        } else if (category === '2') {
+            categoryName = 'Health and Wellness Blogs';
+        }
+    }
+
+    sqlQuery += " GROUP BY p.id";
+
+    const queryParams = category ? [category] : [];
+
+    db.query(sqlQuery, queryParams, (err, posts) => {
+        if (err) {
+            console.error(err);
+            return res.redirect('/error-page'); // Handle the error as per your error handling strategy
+        }
+
+        let data = Object.assign({}, blogData, {
+            posts: posts,
+            username: req.session.username,
+            categoryName: categoryName // Pass categoryName to the EJS template
+        });
+        res.render('blog.ejs', data);
+    });
+});
+
+
+app.get('/blog/:id', fetchCategories, function(req, res) {
+    const postId = req.params.id;
+
+    let sqlQuery = `
+        SELECT p.id, p.title, p.content, p.created_at, u.username, GROUP_CONCAT(t.name SEPARATOR ', ') AS tags
+        FROM posts p
+        JOIN users u ON p.user_id = u.id
+        LEFT JOIN post_tags pt ON p.id = pt.post_id
+        LEFT JOIN tags t ON pt.tag_id = t.id
+        WHERE p.id = ?
+        GROUP BY p.id
+    `;
+
+    db.query(sqlQuery, [postId], (err, posts) => {
+        if (err) {
+            console.error(err);
+            return res.redirect('/error-page'); // Redirect to an error page or handle error
+        }
+
+        if (posts.length > 0) {
+            let data = Object.assign({}, blogData, { post: posts[0], username: req.session.username });
+            res.render('post.ejs', data); // Render a template for the full post
+        } else {
+            res.render('post-not-found.ejs'); // Render a 'post not found' template or similar
+        }
+    });
+});
+
+
+
+
+
+app.get('/create-blog', fetchCategories, function(req, res) {
+    if (!req.session.username) {
+        res.redirect('/login'); // Redirect to login if not logged in
+    } else {
+        // Include 'siteName' when rendering the view
+        let data = Object.assign({}, blogData, {username: req.session.username});
+        res.render('create-blog.ejs', data);
+    }
+});
+
+
+app.post('/submit-blog', redirectLogin, function(req, res) {
+    const { title, content, category_id, tags } = req.body;
+    const user_id = req.session.userId;
+
+    // Insert the blog post first
+    let sqlQuery = "INSERT INTO posts (user_id, category_id, title, content) VALUES (?, ?, ?, ?)";
+    db.query(sqlQuery, [user_id, category_id, title, content], (err, result) => {
+        if (err) {
+            // handle error
+            return res.redirect('/create-blog');
+        }
+
+        const postId = result.insertId;
+        // Process tags
+        const tagArray = tags.split(',').map(tag => tag.trim());
+        tagArray.forEach(tag => {
+            // Check if tag exists and insert if not, then link to post
+            // This will require additional queries
+        });
+
+        res.redirect('/blog');
+    });
+});
+
 }
