@@ -84,23 +84,16 @@
                 %>
                 <a href="/search-by-tag/<%= tag %>" class="tag-link"><%= tag %></a><%= index < tagArray.length - 1 ? '
                             , ' : '' %>
-            <% 
-            }); 
-            %> 
-<% } %>
-
-
+            <%  }); %>
+            <% } %>
                 </div>
-                
-    
+
                 <div class="post-content">
                     <p><%= post.content.substring(0, 200) %>...
                         <a href="/blog/<%= post.id %>">Read more</a>
 
                     </p>
                 </div>
-
-
 
             </div>
         <% }); %>
