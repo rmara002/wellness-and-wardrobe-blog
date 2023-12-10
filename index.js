@@ -4,11 +4,14 @@ var ejs = require('ejs');
 var bodyParser = require('body-parser');
 const mysql = require('mysql');
 var session = require('express-session');
+var validator = require ('express-validator');
+const expressSanitizer = require('express-sanitizer');
 
 // Create the express application object
 const app = express();
 const port = 8000;
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(expressSanitizer());
 
 // Set up a static route to serve files from the 'images' directory when accessed with '/images' URL path
 app.use('/images', express.static('images'));
@@ -63,3 +66,4 @@ require("./routes/main")(app, blogData);
 
 // Start the web app listening
 app.listen(port, () => console.log(`Blog app listening on port ${port}!`));
+
