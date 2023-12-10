@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Search Results - <%= siteName %>
+    </title>
+    <link rel="stylesheet" type="text/css" href="/main.css" />
+</head>
+
+<body>
+    <!-- Add the image at the top -->
+    <div class="logo-container"><img src="../images/blog logo.png" alt="Blog Website Logo" class="logo-pic"></div>
+
+    <!-- Add the navigation bar -->
+    <nav>
+        <div> <!-- New wrapping div for the left links -->
+            <a href="/" class="nav-links">Home</a>
+            <a href="/about" class="nav-links">About <%=siteName%></a>
+
+            <!-- Navigation link with dropdowns -->
+            <div class="dropdown">
+                <a href="/blog" class="nav-links">Blogs</a>
+                <div class="dropdown-content">
+                    <a href="/blog">All Blog Posts</a>
+                    <% categories.forEach(category=> { %>
+                        <a href="/blog?category=<%= category.id %>">
+                            <%= category.name %>
+                        </a>
+                        <% }); %>
+                            <a href="/create-blog">Create a Blog</a>
+                </div>
+            </div>
+
+            <a href="/search" class="nav-links">Search</a>
+        </div> <!-- End of wrapping div for the left links -->
+
+        <div> <!-- New wrapping div for the right links -->
+            <% if (!username) { %> <!-- If there's no username, show the Login and Register links -->
+                <a href="/login" class="nav-links">Login</a>
+                <a href="/register" class="nav-links">Register</a>
+                <% } else { %>
+                    <!-- If there's a username, show the username and the Logout link, and remove the Login and Register links -->
+                    <span class="nav-links">
+                        <%= username %>
+                    </span>
+                    <a href="logout" class="nav-links">Logout</a>
+                    <% } %>
+        </div> <!-- End of wrapping div for the right links -->
+
+        <!-- <a href="listusers" class="nav-links">list</a> -->
+        <!--  <a href="deleteuser" class="nav-links">delete</a> -->
+    </nav>
+
+    <div class="search-result-title">
+        Search Results for "<%= searchKeyword %>"
+    </div>
+
+    <!-- Check if there are search results -->
+    <% if (searchResults && searchResults.length> 0) { %>
+        <% searchResults.forEach(function(post) { %>
+            <div class="post-container">
+                <!-- <h2><a href="/blog/<%= post.id %>"><%= post.title %></a></h2> -->
+                <h2>
+                    <%= post.title %>
+                </h2>
+
+                <div class="post-details">
+                    <p>By: <%= post.username %> | Posted on: <%= new Date(post.created_at).toLocaleString() %>
+                                <% if (post.last_updated_at && new Date(post.last_updated_at)> new
+                                    Date(post.created_at)) { %>
+                                    | Last Edited: <%= new Date(post.last_updated_at).toLocaleString() %>
+                                        <% } %>
+                    </p>
+                    <!-- Category: <a href="/blog?category=<%= post.category_id %>"><%= post.categoryName %> </a> | -->
+                    Category: <a href="/blog?category=<%= post.categoryId %>">
+                        <%= post.categoryName %>
+                    </a> |
+
+                    <!-- Display tags -->
+                    <% if (post.tags) { %>
+                        Tags:
+                        <% const tagArray=post.tags.split(', ');
+            tagArray.forEach((tag, index) => { 
+                %>
+                <a href="/search-by-tag/<%= tag %>" class="tag-link"><%= tag %></a><%= index < tagArray.length - 1 ? '
+                            , ' : '' %>
+            <% 
+            }); 
+            %> 
+<% } %>
+
+
+                </div>
+                
+    
+                <div class="post-content">
+                    <p><%= post.content.substring(0, 200) %>...
+                        <a href="/blog/<%= post.id %>">Read more</a>
+
+                    </p>
+                </div>
+
+
+
+            </div>
+        <% }); %>
+    <% } else { %>
+        <div class="no-results-container">
+            <p>No results found for "<%= searchKeyword %>".</p>
+        </div>
+    <% } %>
+    
+    <a href="/blog" class="back-to-blog-link">Return to All Blogs</a>
+
+
+</body>
+</html>
