@@ -1,21 +1,43 @@
 /* === GLOBAL STYLES === */
 body {
   font-family: Arial, Helvetica, sans-serif;
-  background-color: white; 
+  background-color: white;
 }
 
-h1, h2 {
+h1 {
   font-size: 20px;
   color: #9AAB89;
   text-align: center;
 }
 
-p, li {
+h2 {
+  font-size: 20px;
+  color: #B8A082;
+  text-align: center;
+}
+
+p,
+li {
   color: black;
 }
 
+/* === BLOG LOGO STYLING === */
+.logo-container {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+.logo-pic {
+  width: 20vw;
+  max-width: 1000px;
+  height: auto;
+  display: inline-block;
+}
+
 /* === LINKS STYLING === */
-a:link, a:visited {
+a:link,
+a:visited {
   color: blue;
   text-decoration: none;
   padding: 5px;
@@ -49,13 +71,16 @@ nav a {
   margin: 0 15px;
 }
 
-.nav-links:link, .nav-links:visited {
+.nav-links:link,
+.nav-links:visited {
   color: #6B4724;
   text-decoration: none;
   padding: 5px;
 }
 
-.nav-links:hover, .nav-links:active, .nav-links.current {
+.nav-links:hover,
+.nav-links:active,
+.nav-links.current {
   color: white;
   background-color: #B8A082;
   text-decoration: none;
@@ -63,145 +88,10 @@ nav a {
   border-radius: 3px;
 }
 
-/* === BLOG LOGO STYLING === */
-.logo-container {
-  display: block;
-  width: 100%;
-  text-align: center;
-}
-
-.logo-pic {
-  width: 20vw;
-  max-width: 1000px;
-  height: auto;
-  display: inline-block;
-}
-
-/* === CONTENT STYLING === */
-.about-description {
-  text-align: center;
-}
-
-/* === SEARCH CONTAINER STYLES === */
-.search-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
-
-#search-box {
-  height: calc(1em + 16px);
-  border: none;
-  padding-left: 12px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  width: 300px;
-}
-
-#search-box::placeholder {
-  color: grey;
-}
-
-#search-box:focus::placeholder {
-  color: transparent;
-}
-
-input[type="submit"] {
-  background-color: #A6C7B6;
-  color: #6B4724;
-  border: none;
-  padding: 8px 12px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  border-radius: 5px;
-}
-
-input[type="submit"]:hover {
-  background-color: #B8A082;
-  color: white;
-}
-
-.search-blog {
-  text-align: center;
-}
-
-/* === LOGIN CONTAINER STYLES === */
-.login-container {
-  max-width: 500px;
-  margin: 0 auto;
-  border: none;
-  padding: 20px;
-}
-
-.login-container p {
-  margin-bottom: 15px; 
-}
-
-.login-container input[type="text"], .login-container input[type="password"] {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-top: 5px;
-  margin-bottom: 15px;
-}
-
-.login-container input[type="submit"] {
-  width: auto;
-  display: block;
-  margin: 0 auto;
-}
-
-/* === REGISTER CONTAINER STYLES === */
-.register-container {
-  max-width: 500px;
-  margin: 0 auto;
-  border: none;
-  padding: 20px;
-}
-
-.register-container label, .register-container input {
-  display: block;
-  width: 100%;
-  margin-bottom: 15px;
-}
-
-.register-container label {
-  text-align: left;
-}
-
-.register-container input[type="text"], .register-container input[type="email"], .register-container input[type="password"] {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.register-container input[type="submit"] {
-  width: auto;
-  display: block;
-  margin: 0 auto;
-}
-
-.register-error-message {
-  color: red;
-  margin-bottom: 10px;
-}
-
-/* Login and Registration Password Show/Hide Toggle */
-.toggle-password {
-  margin-left: 5px; 
-  color: grey;
-  cursor: pointer;
-  user-select: none; 
-  font-size: 0.8em;
-}
-
-/* Blog dropdown */
+/* === BLOG DROPDOWN NAVIGATION STYLES === */
 .dropdown {
   position: relative;
-  display: inline-block; /* So it behaves like an inline element in the nav bar */
+  display: inline-block;
 }
 
 .dropdown-content {
@@ -230,75 +120,257 @@ input[type="submit"]:hover {
   display: block;
 }
 
-
-
-
-.blog-post-title {
-  font-size: 20px;
-  color: #B8A082;
+/* === ABOUT CONTENT STYLING === */
+.about-description {
   text-align: center;
-  padding: 20px;
-  font-weight: bold;
 }
 
+/* === SEARCH STYLES === */
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
 
+.search-box {
+  height: calc(1em + 16px);
+  border: none;
+  padding-left: 12px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 300px;
+}
+
+.search-box::placeholder {
+  color: grey;
+}
+
+.search-box:focus::placeholder {
+  color: transparent;
+}
+
+input[type="submit"] {
+  background-color: #A6C7B6;
+  color: #6B4724;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border-radius: 5px;
+}
+
+input[type="submit"]:hover {
+  background-color: #B8A082;
+  color: white;
+}
+
+.search-blog-text {
+  text-align: center;
+}
+
+.no-results-search-container {
+  text-align: center;
+}
+
+/* === LOGIN STYLES === */
+.login-container {
+  max-width: 500px;
+  margin: 0 auto;
+  border: none;
+  padding: 20px;
+}
+
+.login-container p {
+  margin-bottom: 15px;
+}
+
+.login-container input[type="text"],
+.login-container input[type="password"] {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+}
+
+.login-container input[type="submit"] {
+  width: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+/* === REGISTER STYLES === */
+.register-container {
+  max-width: 500px;
+  margin: 0 auto;
+  border: none;
+  padding: 20px;
+}
+
+.register-container label,
+.register-container input {
+  display: block;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.register-container label {
+  text-align: left;
+}
+
+.register-container input[type="text"],
+.register-container input[type="email"],
+.register-container input[type="password"] {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.register-container input[type="submit"] {
+  width: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.register-error-message {
+  color: red;
+  margin-bottom: 10px;
+}
+
+/* Login and Registration Password Show/Hide Toggle */
+.toggle-password {
+  margin-left: 5px;
+  color: grey;
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.8em;
+}
+
+/* === BLOG POST STYLES === */
 .post-container {
-  margin-left: 20px;  /* Adjust left space */
-  margin-right: 20px; /* Adjust right space */
-  border: 1px solid #ccc; /* Add a border for visual separation */
-  border-radius: 15px;
-  padding: 10px; /* Add some padding around the content */
-  margin-bottom: 20px; /* Space between posts */
+  margin-left: 20px;
+  margin-right: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  margin-bottom: 20px;
 }
 
 .post-container h2 {
-  text-align: center; /* Align title to the left */
+  text-align: center;
 }
 
-.post-container > p {
-  text-align: center; /* Center the username and date/time */
-  margin-bottom: 10px; /* Space between username/date and content */
+.post-container>p {
+  text-align: center;
+  margin-bottom: 10px;
 }
 
 .post-container p:nth-of-type(2) {
-  text-align: left; /* Align the blog content to the left */
+  text-align: left;
   padding: 20px;
 }
-
-/* .tag-link {
-  display: inline-block;
-  background-color: #007bff;
-  color: white;
-  padding: 5px 10px;
-  margin-right: 5px;
-  border-radius: 5px;
-  text-decoration: none;
-  font-size: 12px;
-} */
-
 
 .post-details {
   text-align: center;
   padding-bottom: 25px;
 }
 
+.tag-link {
+  background-color: transparent;
+}
+
+.post-content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 20px;
+}
+
+.post-content a {
+  display: inline;
+  margin-left: 5px;
+}
+
 .blog-deleted-alert-success {
   color: red;
 }
 
-.search-result-title {
-  font-size: 20px;
-  color: #B8A082;
+/* === WEATHER API STYLES === */
+.weather-container {
+  max-width: 600px;
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column; /* stacks children vertically */
+  align-items: center;
+  height: 100%;
+}
+
+.weather-info {
+  margin-top: 20px;
+}
+
+.weather-detail {
+  margin: 10px 0;
+  font-size: 18px;
+}
+
+.weather-error {
+  color: red;
+}
+
+/* === MY API STYLES === */
+.api-container {
+  max-width: 600px;
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column; /* stacks children vertically */
+  align-items: center;
+  height: 100%;
+}
+
+.api-info {
+  margin-top: 20px;
+}
+
+/* === TV SHOW STYLES === */
+.shows-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.show {
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.show img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.show-error-message {
+  color: red;
   text-align: center;
-  padding: 20px;
-  font-weight: bold;
 }
 
-.no-results-container {
-  text-align: center;
+.show-search {
+  max-width: 600px;
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column; /* stacks children vertically */
+  align-items: center;
+  height: 100%;
 }
 
 
-.tag-link {
-  background-color: transparent; /* No background color */
-}
+
+
+
