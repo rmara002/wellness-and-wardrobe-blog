@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+    <%=siteName%> Edit Blog Post
+  </title>
+  <link rel="stylesheet" type="text/css" href="/main.css" />
+  <!-- Include Quill stylesheet -->
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Blog image at the top -->
+    <div class="logo-container"><img src="../images/blog logo.png" alt="Blog Website Logo" class="logo-pic"></div>
+
+    <!-- Navigation bar -->
+    <nav>
+        <div> <!-- Wrapping div for the left links -->
+            <a href="/" class="nav-links">Home</a>
+            <a href="/about" class="nav-links">About <%=siteName%></a>
+
+            <!-- Navigation link with dropdowns -->
+            <div class="dropdown">
+                <a href="/blog" class="nav-links">Blogs</a>
+                <div class="dropdown-content">
+                    <a href="/blog">All Blog Posts</a>
+                    <% categories.forEach(category=> { %>
+                        <a href="/blog?category=<%= category.id %>">
+                            <%= category.name %>
+                        </a>
+                        <% }); %>
+                            <a href="/create-blog">Create a Blog</a>
+                </div>
+            </div>
+
+            <a href="/search" class="nav-links">Search</a>
+            <a href="/weather" class="nav-links">Weather</a>
+            <a href="/api-view" class="nav-links">API</a>
+            <a href="/tv-shows" class="nav-links">TV Shows</a>
+
+            <% if (username==='admin' ) { %>
+                <a href="/listusers" class="nav-links">List Users</a>
+                <a href="/deleteuser" class="nav-links">Delete User</a>
+                <% } %>
+
+        </div> <!-- End of wrapping div for the left links -->
+
+        <div> <!-- Wrapping div for the right links -->
+            <% if (!username) { %> <!-- If there's no username, show the Login and Register links -->
+                <a href="/login" class="nav-links">Login</a>
+                <a href="/register" class="nav-links">Register</a>
+                <% } else { %>
+                    <!-- If there's a username, show the username and the Logout link, and remove the Login and Register links -->
+                    <span class="nav-links">
+                        <%= username %>
+                    </span>
+                    <a href="/logout" class="nav-links">Logout</a>
+                    <% } %>
+        </div> <!-- End of wrapping div for the right links -->
+    </nav>
+
+  <!-- Blog Post Editing Form -->
+  <div class="create-post-container">
+
+    <h1>Edit Blog Post</h1>
+
+    <form action="/update-blog/<%= post.id %>" method="post" id="blog-form">
+
+      <!-- Add a hidden input field for returnCategory -->
+      <input type="hidden" name="returnCategory" value="<%= returnCategory %>">
+
+      <div class="form-group">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" value="<%= post.title %>" required>
+      </div>
+
+      <div class="form-group">
+        <label for="category_id">Category:</label>
+        <select id="category_id" name="category_id">
+          <% categories.forEach(category=> { %>
+            <option value="<%= category.id %>" <%= category.id == post.category_id ? 'selected' : '' %>><%= category.name %></option>
+            <% }); %>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="tags">Tags (separated by commas):</label>
+        <input type="text" id="tags" name="tags" value="<%= post.tags %>"
+          placeholder="e.g., nature, travel, photography">
+      </div>
+
+      <div class="form-group">
+        <label for="content">Content:</label>
+        <div id="editor" style="height: 300px;"></div>
+        <textarea id="content" name="content" style="display:none;"><div><%- post.content %></div></textarea>
+      </div>
+
+      <button type="submit" class="submit-button">Update Post</button>
+    </form>
+  </div>
+
+  <!-- Include Quill library -->
+  <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+  <!-- Initialize Quill editor -->
+  <script>
+    var quill = new Quill('#editor', {
+      theme: 'snow',
+      modules: {
+        toolbar: [
+          [{ header: [1, 2, false] }],
+          ['bold', 'italic', 'underline'],
+          ['image', 'code-block']
+        ]
+      }
+    });
+  
+    // Set the content of the Quill editor
+    var postContent = `<%- post.content %>`;
+    quill.root.innerHTML = postContent;
+  
+    // Form submission validation
+    document.getElementById('blog-form').onsubmit = function (e) {
+      // Get the HTML content of the editor
+      var editorContent = quill.root.innerHTML;
+  
+      // Check if the editor content is empty or just whitespace
+      if (!editorContent.trim() || editorContent === '<p><br></p>') {
+        // Prevent form submission
+        e.preventDefault();
+        // Show an alert to the user
+        alert('Content cannot be left blank.');
+        return false;
+      }
+  
+      // If content is not empty, set the value of the hidden textarea
+      document.getElementById('content').value = editorContent;
+    };
+  </script>
+  
+
+</body>
+
+</html>
