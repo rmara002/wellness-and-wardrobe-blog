@@ -1,61 +1,124 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-    <title><%= post.title %> - <%= siteName %></title>
+    <title>
+        <%= siteName %> <%= post.title %> Blog Post
+    </title>
     <link rel="stylesheet" type="text/css" href="/main.css" />
 </head>
+
 <body>
-   <!-- Add the image at the top -->
-   <div class="logo-container"><img src="../images/blog logo.png" alt="Blog Website Logo" class="logo-pic"></div>
+    <!-- Blog image at the top -->
+    <div class="logo-container"><img src="../images/blog logo.png" alt="Blog Website Logo" class="logo-pic"></div>
 
-   <!-- Add the navigation bar -->
-<nav>
-   <div> <!-- New wrapping div for the left links -->
-       <a href="/" class="nav-links">Home</a>
-       <a href="about" class="nav-links">About <%=siteName%></a>
-       
-       <!-- Navigation link with dropdowns -->
-       <div class="dropdown">
-           <a href="/blog" class="nav-links">Blog</a>
-           <div class="dropdown-content">
-               <a href="/blog">All Blog Posts</a>
-               <% categories.forEach(category => { %>
-                   <a href="/blog?category=<%= category.id %>"><%= category.name %></a>
-               <% }); %>
-               <a href="/create-blog">Create a Blog</a>
-           </div>
-       </div>
+    <!-- Navigation bar -->
+    <nav>
+        <div> <!-- Wrapping div for the left links -->
+            <a href="/" class="nav-links">Home</a>
+            <a href="/about" class="nav-links">About <%=siteName%></a>
 
-       <a href="search" class="nav-links">Search</a>
-   </div> <!-- End of wrapping div for the left links -->
-   
-   <div> <!-- New wrapping div for the right links -->
-       <% if (!username) { %> <!-- If there's no username, show the Login and Register links -->
-           <a href="login" class="nav-links">Login</a>
-           <a href="register" class="nav-links">Register</a>
-       <% } else { %> <!-- If there's a username, show the username and the Logout link, and remove the Login and Register links -->
-           <span class="nav-links"><%= username %></span>
-           <a href="logout" class="nav-links">Logout</a>
-       <% } %>
-   </div> <!-- End of wrapping div for the right links -->
-</nav>
+            <!-- Navigation link with dropdowns -->
+            <div class="dropdown">
+                <a href="/blog" class="nav-links">Blogs</a>
+                <div class="dropdown-content">
+                    <a href="/blog">All Blog Posts</a>
+                    <% categories.forEach(category=> { %>
+                        <a href="/blog?category=<%= category.id %>">
+                            <%= category.name %>
+                        </a>
+                        <% }); %>
+                            <a href="/create-blog">Create a Blog</a>
+                </div>
+            </div>
 
+            <a href="/search" class="nav-links">Search</a>
+            <a href="/weather" class="nav-links">Weather</a>
+            <a href="/api-view" class="nav-links">API</a>
+            <a href="/tv-shows" class="nav-links">TV Shows</a>
+
+            <% if (username==='admin' ) { %>
+                <a href="/listusers" class="nav-links">List Users</a>
+                <a href="/deleteuser" class="nav-links">Delete User</a>
+                <% } %>
+
+        </div> <!-- End of wrapping div for the left links -->
+
+        <div> <!-- Wrapping div for the right links -->
+            <% if (!username) { %> <!-- If there's no username, show the Login and Register links -->
+                <a href="/login" class="nav-links">Login</a>
+                <a href="/register" class="nav-links">Register</a>
+                <% } else { %>
+                    <!-- If there's a username, show the username and the Logout link, and remove the Login and Register links -->
+                    <span class="nav-links">
+                        <%= username %>
+                    </span>
+                    <a href="/logout" class="nav-links">Logout</a>
+                    <% } %>
+        </div> <!-- End of wrapping div for the right links -->
+    </nav>
 
     <div class="post-container">
-        <h1><%= post.title %></h1>
-        <p>By: <%= post.username %> on <%= new Date(post.created_at).toLocaleString() %></p>
-        <div><%= post.content %></div> <!-- Display the full content -->
-        
-        <!-- Display tags -->
-        <% if(post.tags) { %>
-            <div>
-                <% post.tags.split(', ').forEach(tag => { %>
-                    <a href="/tag/<%= tag %>" class="tag-link"><%= tag %></a>
-                <% }); %>
-            </div>
-        <% } %>
-    </div>
+        <% let returnCategoryText='All Blogs' ; %>
+            <% if (returnCategory==='1' ) { %>
+                <% returnCategoryText='Fashion Blogs' ; %>
+                    <% } else if (returnCategory==='2' ) { %>
+                        <% returnCategoryText='Health & Wellness Blogs' ; %>
+                            <% } %>
 
-    <!-- The rest of your HTML content -->
+                                <h4><a href="/blog<%= returnCategory !== 'all' ? '?category=' + returnCategory : '' %>">
+                                        Return to <%= returnCategoryText %>
+                                    </a></h4>
+
+                                <h1>
+                                    <%= post.title %>
+                                </h1>
+
+                                <!-- Display blog post details: author, post created at, time when last edited, category, tags -->
+                                <div class="post-details">
+                                    <p>By: <%= post.username %> | Posted on: <%= new
+                                                Date(post.created_at).toLocaleString() %>
+                                                <% if (post.last_updated_at && new Date(post.last_updated_at)> new
+                                                    Date(post.created_at)) { %>
+                                                    | Last Edited: <%= new Date(post.last_updated_at).toLocaleString()
+                                                        %>
+                                                        <% } %>
+                                    </p>
+
+                                    <!-- Display category -->
+                                    Category: <a href="/blog?category=<%= post.categoryId %>">
+                                        <%= post.categoryName %>
+                                    </a> |
+
+                                    <!-- Display tags -->
+                                    <% if (post.tags) { %>
+                                        Tags:
+                                        <% const tagArray=post.tags.split(', ');
+                                                            tagArray.forEach((tag, index) => { 
+                                                                %>
+                                                                <a href="/search-by-tag/<%= tag %>" class="tag-link"><%= tag %></a>
+                                                <%= index < tagArray.length - 1 ? ' , ' : '' %>
+                                                            <% 
+                                                            }); 
+                                                            %>
+                                                <% } %>
+
+                                        </div>
+
+                <!-- Display the full content -->
+                <div class="full-post-content"><%- post.content %></div>
+
+                <!-- Show delete option for admin or the post creator -->
+                <% if (isAdmin || (currentUserId && post.user_id===currentUserId)) { %>
+                    <% if (currentUserId && post.user_id===currentUserId) { %>
+                        <a href="/edit-blog/<%= post.id %>?returnCategory=<%= returnCategory %>">Edit</a>
+                        <% } %>
+                            <a href="/delete-blog/<%= post.id %>"
+                                onclick="return confirm(' Are you sure you want to delete this post?');">Delete</a>
+                                            <% } %>
+
+                                </div>
+
 </body>
+
 </html>
