@@ -173,6 +173,10 @@ input[type="submit"]:hover {
   text-align: center;
 }
 
+.back-to-blog-link {
+  font-weight: bold;
+}
+
 /* === LOGIN STYLES === */
 .login-container {
   max-width: 500px;
@@ -200,6 +204,11 @@ input[type="submit"]:hover {
   width: auto;
   display: block;
   margin: 0 auto;
+}
+
+.login-error-message {
+  color: red;
+  margin-bottom: 10px;
 }
 
 /* === REGISTER STYLES === */
@@ -297,7 +306,95 @@ input[type="submit"]:hover {
 }
 
 .blog-deleted-alert-success {
+  color: green;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* === BLOG POST COMMENT STYLES === */
+.login-register-comment-text {
+  text-align: center;
+}
+
+.comment-text-field {
+  text-align: center;
+}
+
+.comment-form textarea {
+  width:50%;
+  margin-bottom: 10px; 
+}
+
+.comment-form button {
+  display: block; 
+  margin: 0 auto;
+  margin-bottom: 10px;
+}
+
+.comments-container {
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
+}
+
+.comment-box {
+  border: 1px solid #ccc; 
+  padding: 10px; 
+  margin-bottom: 15px; 
+  background-color: #f9f9f9; 
+  border-radius: 8px;
+  width:50%;
+}
+
+.comment-box:last-child {
+  margin-bottom: 0; 
+}
+
+.comment-actions {
+  display: flex;
+  align-items: center;
+}
+
+.comment-action-btn,
+.comment-action-form {
+  margin-right: 10px; 
+}
+
+.edit-form {
+  display: none; /* Initially hidden */
+  padding-top: 10px;
+}
+
+.comment-alert {
+  text-align: center;
+  padding: 10px;
+  margin: 10px auto;
+  width: 80%;
+  border-radius: 5px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.comment-alert-success {
+  color: green;
+  font-weight: bold;
+}
+
+.comment-alert-error {
   color: red;
+}
+
+/* === BLOG POST STAR RATING STYLE === */
+.rating-system {
+  text-align: center; 
+  padding-bottom: 50px;
+}
+
+.star {
+  color: gray;
+  cursor: pointer;
+}
+.filled {
+  color: gold;
 }
 
 /* === WEATHER API STYLES === */
@@ -369,8 +466,3 @@ input[type="submit"]:hover {
   align-items: center;
   height: 100%;
 }
-
-
-
-
-
