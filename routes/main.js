@@ -481,7 +481,16 @@ module.exports = function (app, blogData) {
         const category = req.query.category;
         const returnCategory = req.query.returnCategory || 'all';
 
-        let sqlQuery = "SELECT * FROM posts WHERE id = ?";
+        //let sqlQuery = "SELECT * FROM posts WHERE id = ?";
+        let sqlQuery = `
+    SELECT p.*, GROUP_CONCAT(t.name SEPARATOR ', ') AS tags
+    FROM posts p
+    LEFT JOIN post_tags pt ON p.id = pt.post_id
+    LEFT JOIN tags t ON pt.tag_id = t.id
+    WHERE p.id = ?
+    GROUP BY p.id
+`;
+
         db.query(sqlQuery, [postId], (err, result) => {
             if (err) {
                 console.error(err);
@@ -490,11 +499,13 @@ module.exports = function (app, blogData) {
 
             if (result.length > 0) {
                 const post = result[0];
+                const tags = post.tags || ''; // Get tags, if any
 
                 // Check if the user is the owner of the post or an admin who created the post
                 if (post.user_id === userId || (isAdmin && post.created_by_admin)) {
                     res.render('edit-blog.ejs', {
                         post: post,
+                        tags: tags,
                         username: req.session.username,
                         siteName: blogData.siteName,
                         category: category,
