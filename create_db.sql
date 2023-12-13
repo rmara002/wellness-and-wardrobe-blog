@@ -15,14 +15,6 @@ CREATE TABLE users (
     PRIMARY KEY(id)
 );
 
--- -- Roles table
--- CREATE TABLE roles (
---     id INT PRIMARY KEY AUTO_INCREMENT,
---     name VARCHAR(255) NOT NULL
--- );
-
--- INSERT INTO roles (name) VALUES ('admin'), ('user');
-
 -- Categories table
 CREATE TABLE categories (
     id INT AUTO_INCREMENT,
@@ -49,7 +41,7 @@ CREATE TABLE posts (
     content TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY(id),
-    FOREIGN KEY(user_id) REFERENCES users(id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY(category_id) REFERENCES categories(id)
 );
 
@@ -58,32 +50,34 @@ CREATE TABLE post_tags (
     post_id INT,
     tag_id INT,
     PRIMARY KEY(post_id, tag_id),
-    FOREIGN KEY(post_id) REFERENCES posts(id),
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
     FOREIGN KEY(tag_id) REFERENCES tags(id)
 );
 
--- -- Comments table
--- CREATE TABLE comments (
---     id INT AUTO_INCREMENT,
---     post_id INT,
---     user_id INT,
---     content TEXT,
---     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
---     PRIMARY KEY(id),
---     FOREIGN KEY(post_id) REFERENCES posts(id),
---     FOREIGN KEY(user_id) REFERENCES users(id)
--- );
+-- Comments table
+CREATE TABLE comments (
+    id INT AUTO_INCREMENT,
+    post_id INT,
+    user_id INT,
+    content TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY(id),
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+);
 
--- -- User ratings table
--- CREATE TABLE ratings (
---     post_id INT,
---     user_id INT,
---     rating INT,
---     PRIMARY KEY(post_id, user_id),
---     FOREIGN KEY(post_id) REFERENCES posts(id),
---     FOREIGN KEY(user_id) REFERENCES users(id),
---     CHECK(rating BETWEEN 1 AND 5)
--- );
+-- User ratings table
+CREATE TABLE ratings (
+    post_id INT,
+    user_id INT,
+    rating INT,
+    PRIMARY KEY(post_id, user_id),
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    CHECK(rating BETWEEN 1 AND 5)
+);
+
 
 -- Update user creation and privileges
 CREATE USER 'appuser'@'localhost' IDENTIFIED WITH mysql_native_password BY 'blog2027';
