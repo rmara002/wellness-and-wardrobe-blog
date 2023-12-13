@@ -68,7 +68,7 @@
                         <% returnCategoryText='Health & Wellness Blogs' ; %>
                             <% } %>
 
-                                <h4><a href="/blog<%= returnCategory !== 'all' ? '?category=' + returnCategory : '' %>">
+                                    <h4><a href="/blog<%= returnCategory && returnCategory !== 'all' ? '?category=' + returnCategory : '' %>">
                                         Return to <%= returnCategoryText %>
                                     </a></h4>
 
