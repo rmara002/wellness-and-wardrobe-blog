@@ -125,7 +125,8 @@
                 <% } else { %>
                     <p>No content available for this post.</p>
                 <% } %>
-                <a href="/blog/<%= post.id %>?returnCategory=<%= category || ' all' %>">Read more</a>
+                <a href="/blog/<%= post.id %><%= category && category !== 'all' ? '?returnCategory=' + category : '' %>">Read more</a>
+
                     </div>
 
                     <!-- Show edit/delete options -->
