@@ -86,8 +86,9 @@
             <% posts.forEach(post=> { %>
                 <div class="post-container">
                     <h2>
-                        <%= post.title %>
+                        <%= post.title %>  <!-- Display blog title -->
                     </h2>
+
                     <!-- Display blog post details: author, post created at, time when last edited, category, tags -->
                     <div class="post-details">
                         <p>By: <%= post.username %> | Posted on: <%= new Date(post.created_at).toLocaleString() %>
@@ -129,7 +130,7 @@
 
                     </div>
 
-                    <!-- Show edit/delete options -->
+                    <!-- Show edit and delete options only if the user is an admin or the author of the post -->
                     <% if (isAdmin || (currentUserId && post.user_id===currentUserId)) { %>
                         <div class="post-options">
                             <% if (currentUserId && post.user_id===currentUserId) { %>
