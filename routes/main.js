@@ -22,6 +22,7 @@ module.exports = function (app, blogData) {
         });
     };
 
+    // Homepage Route
     app.get('/', fetchCategories, function (req, res) {
         let message = req.query.message || '';
         let data = Object.assign({}, blogData, { message: message, username: req.session.username, newUser: req.session.newUser });
@@ -38,22 +39,24 @@ module.exports = function (app, blogData) {
         });
     });
 
+    // Route for the Blog's About Section
     app.get('/about', fetchCategories, function (req, res) {
         let data = Object.assign({}, blogData, { username: req.session.username });
         res.render('about.ejs', data);
     });
 
+    // Route for the Blog's Search
     app.get('/search', fetchCategories, function (req, res) {
         let data = Object.assign({}, blogData, { username: req.session.username });
         res.render("search.ejs", data);
     });
 
+    // Route for the Blog's Search-result
     app.get('/search-result', fetchCategories, function (req, res) {
         // Sanitize the search keyword to prevent SQL injection
         let keyword = req.sanitize(req.query.keyword);
         let returnCategory = '';
 
-        // SQL query to search in the posts table and join with the users table to get the username
         let sqlQuery = `
         SELECT posts.*, users.username, categories.name AS categoryName, categories.id AS categoryId,
                GROUP_CONCAT(DISTINCT tags.name SEPARATOR ', ') AS tags
@@ -73,7 +76,6 @@ module.exports = function (app, blogData) {
                 console.error(err);
                 res.render("search-result.ejs", { errorMessage: "An error occurred while processing your request. Please try again later." });
             } else {
-                // Pass the search results to your template
                 let isAdmin = req.session.username === 'admin'; // Check if the user is 'admin'
                 let data = Object.assign({}, blogData, {
                     username: req.session.username,
@@ -88,6 +90,7 @@ module.exports = function (app, blogData) {
         });
     });
 
+    // Route for the Blog's Search by Tag
     app.get('/search-by-tag/:tagName', fetchCategories, function (req, res) {
         const tagName = req.params.tagName;
         let returnCategory = '';
@@ -123,6 +126,7 @@ module.exports = function (app, blogData) {
         });
     });
 
+    // Blog User Registration Route
     app.get('/register', fetchCategories, function (req, res) {
         let data = Object.assign({}, blogData, { username: req.session.username });
         res.render('register.ejs', data);
@@ -145,6 +149,7 @@ module.exports = function (app, blogData) {
         }),
     ];
 
+    // Blog User Registered Route
     app.post('/registered', fetchCategories, registrationValidationRules, function (req, res) {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -200,6 +205,7 @@ module.exports = function (app, blogData) {
         }
     });
 
+    // Route for the Blog's List of Users
     app.get('/listusers', redirectLogin, fetchCategories, function (req, res) {
         if (req.session.username !== 'admin') {
             return res.status(403).send('Access denied');
@@ -216,11 +222,13 @@ module.exports = function (app, blogData) {
         });
     });
 
+    // Login Route
     app.get('/login', fetchCategories, function (req, res) {
         let data = Object.assign({}, blogData, { username: req.session.username });
         res.render('login.ejs', data);
     });
 
+    // Logged In Route
     app.post('/loggedin', fetchCategories, function (req, res) {
         let sqlquery = "SELECT id, hashedPassword FROM users WHERE username = ?";
         let username = req.sanitize(req.body.username);
@@ -228,14 +236,14 @@ module.exports = function (app, blogData) {
 
         db.query(sqlquery, [username], (err, result) => {
             if (err) {
-                return res.render('index', { siteName: blogData.siteName, message: "Error during login.", username: req.session.username });
+                return res.render('login', { siteName: blogData.siteName, message: "Error during login.", username: req.session.username });
             }
             if (result.length === 0) {
-                return res.render('index', { siteName: blogData.siteName, message: "No such user found.", username: req.session.username });
+                return res.render('login', { siteName: blogData.siteName, message: "No such user found.", username: req.session.username });
             }
             bcrypt.compare(req.body.password, result[0].hashedPassword, function (err, isMatch) {
                 if (err) {
-                    return res.render('index', { siteName: blogData.siteName, message: "Error during password comparison.", username: req.session.username });
+                    return res.render('login', { siteName: blogData.siteName, message: "Error during password comparison.", username: req.session.username });
                 }
                 if (isMatch) {
                     req.session.userId = result[0].id; // Store user ID
@@ -244,12 +252,13 @@ module.exports = function (app, blogData) {
                     // Renders the index page with the username for display
                     res.render('index', { siteName: blogData.siteName, username: username, message: `Login successful! Welcome to ${blogData.siteName}.` });
                 } else {
-                    res.render('index', { siteName: blogData.siteName, message: "Wrong username or password.", username: req.session.username });
+                    res.render('login', { siteName: blogData.siteName, message: "Wrong username or password.", username: req.session.username });
                 }
             });
         });
     });
 
+    // User Deletion Route
     app.get('/deleteuser', redirectLogin, fetchCategories, function (req, res) {
         if (req.session.username !== 'admin') {
             return res.status(403).send('Access denied');
@@ -259,6 +268,7 @@ module.exports = function (app, blogData) {
         res.render('deleteuser.ejs', data);
     });
 
+    // User Deleted Route
     app.post('/userdeleted', function (req, res) {
         if (req.session.username !== 'admin') {
             return res.status(403).send('Access denied');
@@ -277,6 +287,7 @@ module.exports = function (app, blogData) {
         });
     });
 
+    // Logout Route
     app.get('/logout', fetchCategories, redirectLogin, (req, res) => {
         req.session.destroy(err => {
             if (err) {
@@ -286,14 +297,14 @@ module.exports = function (app, blogData) {
         });
     });
 
+    // List of Blog Posts Route
     app.get('/blog', fetchCategories, function (req, res) {
         let categoryFilter = req.query.category;
         let categoryName = 'All Blog Posts'; // Default title for no specific category
         let messageBlogDeleted = req.query.messageBlogDeleted;
         let currentUserId = req.session.userId; // currentUserId is obtained from the session
 
-        // Check if the logged-in user is 'admin'
-        const isAdmin = req.session.username === 'admin';
+        const isAdmin = req.session.username === 'admin'; // Check if the logged-in user is 'admin'
 
         let sqlQuery = `
             SELECT p.id, p.user_id, p.title, p.content, p.created_at, p.last_updated_at, 
@@ -342,47 +353,72 @@ module.exports = function (app, blogData) {
         });
     });
 
+    // Blog Post's ID Route
     app.get('/blog/:id', fetchCategories, function (req, res) {
         const postId = req.params.id;
         const currentUserId = req.session.userId; // Get the current user ID from the session
-
-        // Check if the logged-in user is 'admin'
-        const isAdmin = req.session.username === 'admin';
+        const isAdmin = req.session.username === 'admin'; // Check if the logged-in user is 'admin'
 
         let sqlQuery = `
-    SELECT p.id, p.title, p.content, p.created_at, p.last_updated_at, p.user_id, 
-           u.username, c.name as categoryName, c.id as categoryId,
-           GROUP_CONCAT(t.name SEPARATOR ', ') AS tags
-    FROM posts p
-    JOIN users u ON p.user_id = u.id
-    LEFT JOIN categories c ON p.category_id = c.id
-    LEFT JOIN post_tags pt ON p.id = pt.post_id
-    LEFT JOIN tags t ON pt.tag_id = t.id
-    WHERE p.id = ?
-    GROUP BY p.id
-`;
+        SELECT p.id, p.title, p.content, p.created_at, p.last_updated_at, p.user_id, 
+               u.username, c.name as categoryName, c.id as categoryId,
+               GROUP_CONCAT(t.name SEPARATOR ', ') AS tags
+        FROM posts p
+        JOIN users u ON p.user_id = u.id
+        LEFT JOIN categories c ON p.category_id = c.id
+        LEFT JOIN post_tags pt ON p.id = pt.post_id
+        LEFT JOIN tags t ON pt.tag_id = t.id
+        WHERE p.id = ?
+        GROUP BY p.id
+        `;
 
         db.query(sqlQuery, [postId], (err, posts) => {
             if (err) {
                 console.error(err);
                 res.render("blog.ejs", { errorMessage: "An error occurred while processing your request. Please try again later." });
+                return;
             }
 
             if (posts.length > 0) {
-                let data = Object.assign({}, blogData, {
-                    post: posts[0],
-                    username: req.session.username,
-                    currentUserId: currentUserId,
-                    isAdmin: isAdmin,
-                    returnCategory: req.query.returnCategory || 'all'
+                // Fetch comments for the post
+                let fetchCommentsQuery = 'SELECT comments.*, users.username FROM comments JOIN users ON comments.user_id = users.id WHERE post_id = ? ORDER BY created_at DESC';
+
+                db.query(fetchCommentsQuery, [postId], (err, comments) => {
+                    if (err) {
+                        console.error('Error fetching comments:', err);
+                        return res.status(500).render('post.ejs', { errorMessage: "An error occurred while fetching comments." });
+                    }
+
+                    // Fetch the average rating for the post
+                    let avgRatingQuery = 'SELECT AVG(rating) AS averageRating FROM ratings WHERE post_id = ?';
+                    db.query(avgRatingQuery, [postId], (avgErr, avgResult) => {
+                        if (avgErr) {
+                            console.error('Error fetching average rating:', avgErr);
+                            return res.status(500).render('post.ejs', { errorMessage: "An error occurred while fetching average rating." });
+                        }
+
+                        let averageRating = avgResult[0].averageRating || 'Not rated yet';
+
+                        let data = Object.assign({}, blogData, {
+                            post: posts[0],
+                            comments: comments,
+                            username: req.session.username,
+                            currentUserId: currentUserId,
+                            isAdmin: isAdmin,
+                            returnCategory: req.query.returnCategory || 'all',
+                            averageRating: averageRating // Add the average rating
+                        });
+
+                        res.render('post.ejs', data);
+                    });
                 });
-                res.render('post.ejs', data);
             } else {
                 return res.render('blog', { message: "Post not found." });
             }
         });
     });
 
+    // Route for Creating a Blog
     app.get('/create-blog', fetchCategories, function (req, res) {
         if (!req.session.username) {
             res.redirect('/login'); // Redirect to login if not logged in
@@ -392,6 +428,7 @@ module.exports = function (app, blogData) {
         }
     });
 
+    // Route for Submitting and Publishing a Blog
     app.post('/submit-blog', redirectLogin, function (req, res) {
         const user_id = req.session.userId;
         const title = req.sanitize(req.body.title);
@@ -407,7 +444,7 @@ module.exports = function (app, blogData) {
         db.query(sqlQuery, [user_id, category_id, title, content], (err, result) => {
             if (err) {
                 console.error(err);
-                return res.render('create-blog.ejs', {message: 'Error creating blog post. Please try again.'});
+                return res.render('create-blog.ejs', { message: 'Error creating blog post. Please try again.' });
             }
 
             const postId = result.insertId;
@@ -418,7 +455,7 @@ module.exports = function (app, blogData) {
                 db.query(tagSql, [tag, tag], (tagErr, tagResult) => {
                     if (tagErr) {
                         console.error(tagErr);
-                        return res.render('create-blog.ejs', {message: 'Error inserting tag. Please try again.'});
+                        return res.render('create-blog.ejs', { message: 'Error inserting tag. Please try again.' });
                     }
 
                     let tagId = tagResult.insertId;
@@ -426,7 +463,7 @@ module.exports = function (app, blogData) {
                     db.query(postTagSql, [postId, tagId], (postTagErr, postTagResult) => {
                         if (postTagErr) {
                             console.error(postTagErr);
-                            return res.render('create-blog.ejs', {message: 'Error with linking tag to post. Please try again.'});
+                            return res.render('create-blog.ejs', { message: 'Error with linking tag to post. Please try again.' });
                         }
                     });
                 });
@@ -436,6 +473,7 @@ module.exports = function (app, blogData) {
         });
     });
 
+    // Route for Editing a Blog Post
     app.get('/edit-blog/:id', redirectLogin, fetchCategories, function (req, res) {
         const postId = req.params.id;
         const userId = req.session.userId;
@@ -447,7 +485,7 @@ module.exports = function (app, blogData) {
         db.query(sqlQuery, [postId], (err, result) => {
             if (err) {
                 console.error(err);
-                return res.render('edit-blog.ejs', {message: 'Error editing blog post. Please try again.'});
+                return res.render('edit-blog.ejs', { message: 'Error editing blog post. Please try again.' });
             }
 
             if (result.length > 0) {
@@ -473,6 +511,7 @@ module.exports = function (app, blogData) {
         });
     });
 
+    // Route for Updating a Blog Post After Editing
     app.post('/update-blog/:id', redirectLogin, function (req, res) {
         const postId = req.params.id;
         const userId = req.session.userId;
@@ -487,7 +526,7 @@ module.exports = function (app, blogData) {
         db.query(updateSqlQuery, [title, content, category_id, postId, userId], (err, result) => {
             if (err) {
                 console.error(err);
-                return res.render('blog.ejs', {message: 'Error updating blog post. Please try again.'});
+                return res.render('blog.ejs', { message: 'Error updating blog post. Please try again.' });
             }
 
             // Delete old tags
@@ -495,7 +534,7 @@ module.exports = function (app, blogData) {
             db.query(deleteOldTagsSql, [postId], (deleteErr, deleteResult) => {
                 if (deleteErr) {
                     console.error(deleteErr);
-                    return res.render('blog.ejs', {message: 'Error with the tag. Please try again.'});
+                    return res.render('blog.ejs', { message: 'Error with the tag. Please try again.' });
                 }
 
                 // Insert new tags
@@ -509,7 +548,7 @@ module.exports = function (app, blogData) {
                     db.query(tagSql, [tag, tag], (tagErr, tagResult) => {
                         if (tagErr) {
                             console.error(tagErr);
-                            return res.render('blog.ejs', {message: 'Error with the tag. Please try again.'});
+                            return res.render('blog.ejs', { message: 'Error with the tag. Please try again.' });
                         }
 
                         let tagId = tagResult.insertId;
@@ -517,7 +556,7 @@ module.exports = function (app, blogData) {
                         db.query(postTagSql, [postId, tagId], (postTagErr, postTagResult) => {
                             if (postTagErr) {
                                 console.error(postTagErr);
-                                return res.render('blog.ejs', {message: 'Error with the tag. Please try again.'});
+                                return res.render('blog.ejs', { message: 'Error with the tag. Please try again.' });
                             }
                         });
                     });
@@ -527,6 +566,7 @@ module.exports = function (app, blogData) {
         });
     });
 
+    // Route for Deleting a Blog Post
     app.get('/delete-blog/:id', redirectLogin, fetchCategories, function (req, res) {
         const postId = req.params.id;
         const userId = req.session.userId;
@@ -550,14 +590,14 @@ module.exports = function (app, blogData) {
         db.query(deletePostTagsSql, [postId], (err, result) => {
             if (err) {
                 console.error(err);
-                return res.render('blog.ejs', {message: 'Error deleting post. Please try again.'});
+                return res.render('blog.ejs', { message: 'Error deleting post. Please try again.' });
             }
 
             // Then, delete the post
             db.query(deletePostSql, queryParams, (err, result) => {
                 if (err) {
                     console.error(err);
-                    return res.render('blog.ejs', {message: 'Error deleting post. Please try again.'});
+                    return res.render('blog.ejs', { message: 'Error deleting post. Please try again.' });
                 }
 
                 if (result.affectedRows > 0) {
@@ -569,6 +609,89 @@ module.exports = function (app, blogData) {
         });
     });
 
+    // Route to Post a Comment
+    app.post('/blog/:postId/comment', redirectLogin, function (req, res) {
+        const userId = req.session.userId;
+        const postId = req.params.postId;
+        const content = req.sanitize(req.body.content);
+
+        let insertCommentQuery = 'INSERT INTO comments (post_id, user_id, content) VALUES (?, ?, ?)';
+
+        db.query(insertCommentQuery, [postId, userId, content], (err, result) => {
+            if (err) {
+                console.error('Error inserting comment:', err);
+                return res.status(500).send('Error posting comment.');
+            }
+            res.redirect(`/blog/${postId}`);
+        });
+    });
+
+    // Route to Delete a Comment
+    app.post('/comment/:commentId/delete', redirectLogin, function (req, res) {
+        const userId = req.session.userId;
+        const commentId = req.params.commentId;
+
+        let deleteCommentQuery = 'DELETE FROM comments WHERE id = ? AND user_id = ?';
+
+        db.query(deleteCommentQuery, [commentId, userId], (err, result) => {
+            if (err) {
+                console.error('Error deleting comment:', err);
+                return res.status(500).json({ success: false, message: 'Error deleting comment.' });
+            }
+            res.json({ success: true, message: 'Comment deleted successfully.', commentId: commentId });
+        });
+    });
+
+    // Route to Edit a Comment
+    app.post('/comment/:commentId/edit', redirectLogin, function (req, res) {
+        const userId = req.session.userId;
+        const commentId = req.params.commentId;
+        const content = req.sanitize(req.body.content);
+
+        const updateCommentQuery = 'UPDATE comments SET content = ?, updated_at = NOW() WHERE id = ? AND user_id = ?';
+
+        db.query(updateCommentQuery, [content, commentId, userId], (err, result) => {
+            if (err) {
+                console.error('Error updating comment:', err);
+                return res.status(500).send('Error updating comment.');
+            }
+            res.redirect('back');
+        });
+    });
+
+    // Route to Rate a Blog Post
+    app.post('/rate/:postId/:rating', redirectLogin, (req, res) => {
+        const postId = req.params.postId;
+        const rating = parseInt(req.params.rating);
+        const userId = req.session.userId;
+
+        if (rating < 1 || rating > 5) {
+            return res.status(400).json({ success: false, message: 'Invalid rating' });
+        }
+
+        // Insert or update the rating in the database
+        let sqlQuery = 'REPLACE INTO ratings (post_id, user_id, rating) VALUES (?, ?, ?)';
+        db.query(sqlQuery, [postId, userId, rating], (err, result) => {
+            if (err) {
+                console.error('Error updating rating:', err);
+                return res.status(500).json({ success: false, message: 'Error updating rating' });
+            }
+
+            // Retrieve the new average rating
+            let avgQuery = 'SELECT AVG(rating) AS averageRating FROM ratings WHERE post_id = ?';
+            db.query(avgQuery, [postId], (avgErr, avgResult) => {
+                if (avgErr) {
+                    console.error('Error fetching average rating:', avgErr);
+                    return res.status(500).json({ success: false, message: 'Error fetching average rating' });
+                }
+
+                res.json({ success: true, averageRating: avgResult[0].averageRating });
+            });
+        });
+    });
+
+
+    // Weather Route
     app.get('/weather', fetchCategories, function (req, res) {
         res.render('weather.ejs', {
             weather: null,
@@ -578,6 +701,7 @@ module.exports = function (app, blogData) {
         });
     });
 
+    // Weather Route
     app.post('/weather', fetchCategories, function (req, res) {
         const apiKey = 'ed6e8759e90f6acfdf8b32a9155c71dd';
         const city = req.body.city;
@@ -636,6 +760,7 @@ module.exports = function (app, blogData) {
         });
     });
 
+    // My Blog's API Route
     app.get('/api', function (req, res) {
         let keyword = req.query.keyword;
         let sqlQuery = "SELECT * FROM posts";
@@ -661,6 +786,7 @@ module.exports = function (app, blogData) {
         });
     });
 
+    // My Blog's API Route
     app.get('/api-view', fetchCategories, function (req, res) {
         let keyword = req.query.keyword;
         let sqlQuery = "SELECT * FROM posts";
@@ -675,7 +801,7 @@ module.exports = function (app, blogData) {
         db.query(sqlQuery, queryParams, (err, result) => {
             if (err) {
                 console.error('Error fetching posts:', err);
-                return res.render('error.ejs', {
+                return res.render('api.ejs', {
                     error: 'Internal server error',
                     siteName: blogData.siteName,
                     username: req.session.username
@@ -683,7 +809,7 @@ module.exports = function (app, blogData) {
             }
 
             if (!result || result.length === 0) {
-                return res.render('error.ejs', {
+                return res.render('api.ejs', {
                     error: 'No posts found',
                     siteName: blogData.siteName,
                     username: req.session.username
@@ -698,6 +824,7 @@ module.exports = function (app, blogData) {
         });
     });
 
+    // TV-Show Route
     app.get('/tv-shows', fetchCategories, function (req, res) {
         res.render('tv-shows.ejs', { shows: null, error: null, siteName: blogData.siteName, username: req.session.username });
     });
@@ -717,6 +844,7 @@ module.exports = function (app, blogData) {
         });
     }
 
+    // Search TV-Show Route
     app.get('/search-shows', fetchCategories, function (req, res) {
         const request = require('request');
         const query = req.query.search;
