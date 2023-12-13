@@ -61,13 +61,12 @@
     <h1>Search for a TV Show</h1>
 
     <div class="show-search">
-
         <form action="/search-shows" method="get">
             <input class="search-box" type="text" name="search" placeholder="Search TV Shows" required>
             <input type="submit" value="Search">
         </form>
-
     </div>
+
     <% if(shows) { %>
         <div class="shows-container">
             <% shows.forEach(showItem=> {
