@@ -61,25 +61,26 @@
     <h1>Blog API Data</h1>
 
     <script>
+        // Define an asynchronous function to fetch blog posts based on a keyword
         async function fetchPosts(keyword = '') {
-            const response = await fetch(`/api?keyword=${keyword}`);
-            const data = await response.json();
-            document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+            const response = await fetch(`/api?keyword=${keyword}`); // Perform an API request using the provided keyword
+            const data = await response.json(); 
+            document.getElementById('result').textContent = JSON.stringify(data, null, 2); // Display the data in the 'result' element as formatted JSON
         }
 
-        // Fetch all posts on page load
+        // Automatically fetch and display all posts when the page loads
         window.onload = () => fetchPosts();
     </script>
 
     <div class="api-container">
-        <!-- Search Form -->
+        <!-- Search form to input a keyword and trigger the fetchPosts function -->
         <form onsubmit="event.preventDefault(); fetchPosts(document.getElementById('keyword').value);">
             <input class="search-box" type="text" id="keyword" placeholder="Enter keyword" />
             <input type="submit" value="Search">
         </form>
 
         <div class="api-info">
-            <!-- Displaying the JSON Results -->
+            <!-- Displaying the JSON results -->
             <pre id="result"></pre>
         </div>
     </div>
