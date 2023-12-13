@@ -390,11 +390,16 @@ input[type="submit"]:hover {
 }
 
 .star {
-  color: gray;
+  color: grey; /* Default color for unfilled stars */
   cursor: pointer;
 }
-.filled {
-  color: gold;
+
+.star.filled-yellow {
+  color: #FFD700; /* Color for filled stars showing the average rating */
+}
+
+.star.filled-blue {
+  color: blue; /* Color for filled stars during hover and selection */
 }
 
 /* === WEATHER API STYLES === */
