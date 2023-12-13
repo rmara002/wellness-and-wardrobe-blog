@@ -405,7 +405,7 @@ module.exports = function (app, blogData) {
                             username: req.session.username,
                             currentUserId: currentUserId,
                             isAdmin: isAdmin,
-                            returnCategory: req.query.returnCategory || 'all',
+                            returnCategory: req.query.returnCategory || '',
                             averageRating: averageRating // Add the average rating
                         });
 
