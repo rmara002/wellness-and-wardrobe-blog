@@ -72,6 +72,15 @@
       </p>
       <input type="submit" value="Login" />
     </form>
+
+    <div class="login-error-message">
+      <% if (typeof message !=='undefined' && message) { %>
+        <span>
+          <%= message %>
+        </span>
+        <% } %>
+    </div>
+
   </div>
 
   <script>
