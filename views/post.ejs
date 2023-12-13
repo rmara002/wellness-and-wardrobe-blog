@@ -68,9 +68,11 @@
                         <% returnCategoryText='Health & Wellness Blogs' ; %>
                             <% } %>
 
-                                    <h4><a href="/blog<%= returnCategory && returnCategory !== 'all' ? '?category=' + returnCategory : '' %>">
+                                <h4>
+                                    <a href="/blog<%= returnCategory && returnCategory !== 'all' ? '?category=' + returnCategory : '' %>">
                                         Return to <%= returnCategoryText %>
-                                    </a></h4>
+                                    </a>
+                                </h4>
 
                                 <h1>
                                     <%= post.title %>
@@ -123,12 +125,17 @@
                                 <!-- Star rating system -->
                                 <div class="rating-system">
                                     <!-- Star rating display -->
-                                    <div id="stars" class="star-rating">
-                                        <span class="star" onclick="setRating(1)">&#9733;</span>
-                                        <span class="star" onclick="setRating(2)">&#9733;</span>
-                                        <span class="star" onclick="setRating(3)">&#9733;</span>
-                                        <span class="star" onclick="setRating(4)">&#9733;</span>
-                                        <span class="star" onclick="setRating(5)">&#9733;</span>
+                                    <div id="stars" class="star-rating" onmouseout="resetStarsToAverage()">
+                                        <span class="star" onmouseover="hoverRating(1)"
+                                            onclick="setRating(1)">&#9733;</span>
+                                        <span class="star" onmouseover="hoverRating(2)"
+                                            onclick="setRating(2)">&#9733;</span>
+                                        <span class="star" onmouseover="hoverRating(3)"
+                                            onclick="setRating(3)">&#9733;</span>
+                                        <span class="star" onmouseover="hoverRating(4)"
+                                            onclick="setRating(4)">&#9733;</span>
+                                        <span class="star" onmouseover="hoverRating(5)"
+                                            onclick="setRating(5)">&#9733;</span>
                                     </div>
 
                                     <!-- Average rating display -->
@@ -139,18 +146,17 @@
                                 <script>
                                     function setRating(rating) {
                                         console.log("Rating clicked: ", rating);
-                                        // Check if the user is logged in
                                         if (!"<%= username %>") {
                                             alert('Please log in or register to rate.');
                                             return;
                                         }
 
-                                        // Send the rating to the server
                                         fetch('/rate/' + "<%= post.id %>" + '/' + rating, { method: 'POST' })
                                             .then(response => response.json())
                                             .then(data => {
                                                 if (data.success) {
                                                     updateAverageRating(data.averageRating);
+                                                    highlightStars(rating); // Highlight stars based on user's rating
                                                 } else {
                                                     alert('Error submitting rating');
                                                 }
@@ -160,28 +166,52 @@
                                             });
                                     }
 
-                                    function updateAverageRating(averageRating) {
-                                        const roundedRating = Math.round(averageRating);
-                                        document.getElementById('average-rating-value').innerText = averageRating.toFixed(1);
-
-                                        // Update star filling
+                                    function hoverRating(rating) {
                                         const stars = document.querySelectorAll('#stars .star');
                                         stars.forEach((star, index) => {
-                                            if (index < roundedRating) {
-                                                star.classList.add('filled');
-                                            } else {
-                                                star.classList.remove('filled');
+                                            star.classList.remove('filled-yellow');
+                                            if (index < rating) {
+                                                star.classList.add('filled-blue');
                                             }
                                         });
                                     }
-                                </script>
 
-                                <script type="text/javascript">
-                                    // Update average rating
+                                    function resetStarsToAverage() {
+                                        const averageRating = parseFloat(document.getElementById('average-rating-value').innerText);
+                                        const stars = document.querySelectorAll('#stars .star');
+                                        stars.forEach((star, index) => {
+                                            star.classList.remove('filled-blue');
+                                            if (index < Math.round(averageRating)) {
+                                                star.classList.add('filled-yellow');
+                                            } else {
+                                                star.classList.remove('filled-yellow');
+                                            }
+                                        });
+                                    }
+
+                                    function highlightStars(rating) {
+                                        const stars = document.querySelectorAll('#stars .star');
+                                        stars.forEach((star, index) => {
+                                            star.classList.remove('filled-blue');
+                                            star.classList.add(index < rating ? 'filled-yellow' : '');
+                                        });
+                                        console.log('highlightStars called with', rating);
+                                    }
+
+                                    function updateAverageRating(averageRating) {
+                                        document.getElementById('average-rating-value').innerText = averageRating.toFixed(1);
+                                        resetStarsToAverage();
+                                    }
+
+                                    // Call this function when the page loads to set the initial average rating
                                     document.addEventListener('DOMContentLoaded', function () {
-                                        updateAverageRating(<%= averageRating %>);
+                                        // Check if averageRating is provided by the server-side template
+                                        // If not, set a default value or leave it as is
+                                        var initialRating = <%= typeof averageRating !== 'undefined' ? averageRating : 'Default Value' %>;
+                                        updateAverageRating(initialRating);
                                     });
                                 </script>
+
 
                                 <!-- Blog comment section -->
                                 <!-- Check if the user is logged in -->
