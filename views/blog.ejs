@@ -63,30 +63,50 @@
         <%= categoryName %>
     </h1>
 
-    <!-- Display blog post -->
-    <% posts.forEach(post=> { %>
-        <div class="post-container">
-            <h2>
-                <%= post.title %>
-            </h2>
-            <!-- Display blog post details: author, post created at, time when last edited, category, tags -->
-            <div class="post-details">
-                <p>By: <%= post.username %> | Posted on: <%= new Date(post.created_at).toLocaleString() %>
-                            <% if (post.last_updated_at && new Date(post.last_updated_at)> new Date(post.created_at)) {
-                                %>
-                                | Last Edited: <%= new Date(post.last_updated_at).toLocaleString() %>
-                                    <% } %>
-                </p>
+    <!-- Display the blog deleted success message -->
+    <% if (messageBlogDeleted) { %>
+        <div id="blog-deleted-message" class="blog-deleted-alert-success">
+            <%= messageBlogDeleted %>
+        </div>
+        <% } %>
 
-                <!-- Display category -->
-                Category: <a href="/blog?category=<%= post.categoryId %>">
-                    <%= post.categoryName %>
-                </a> |
+            <script>
+                // Automatically hide the message about blog deletion after 7 seconds
+                document.addEventListener('DOMContentLoaded', function () {
+                    const messageElement = document.getElementById('blog-deleted-message');
+                    if (messageElement) {
+                        setTimeout(function () {
+                            messageElement.style.display = 'none';
+                        }, 7000);
+                    }
+                });
+            </script>
 
-                <!-- Display tags -->
-                <% if (post.tags) { %>
-                    Tags:
-                    <% const tagArray=post.tags.split(', ');
+            <!-- Display blog post -->
+            <% posts.forEach(post=> { %>
+                <div class="post-container">
+                    <h2>
+                        <%= post.title %>
+                    </h2>
+                    <!-- Display blog post details: author, post created at, time when last edited, category, tags -->
+                    <div class="post-details">
+                        <p>By: <%= post.username %> | Posted on: <%= new Date(post.created_at).toLocaleString() %>
+                                    <% if (post.last_updated_at && new Date(post.last_updated_at)> new
+                                        Date(post.created_at)) {
+                                        %>
+                                        | Last Edited: <%= new Date(post.last_updated_at).toLocaleString() %>
+                                            <% } %>
+                        </p>
+
+                        <!-- Display category -->
+                        Category: <a href="/blog?category=<%= post.categoryId %>">
+                            <%= post.categoryName %>
+                        </a> |
+
+                        <!-- Display tags -->
+                        <% if (post.tags) { %>
+                            Tags:
+                            <% const tagArray=post.tags.split(', ');
                             tagArray.forEach((tag, index) => { 
                                 %>
                                 <a href="/search-by-tag/<%= tag %>" class="tag-link"><%= tag %></a>
@@ -105,28 +125,21 @@
                 <% } else { %>
                     <p>No content available for this post.</p>
                 <% } %>
-                <a href="/blog/<%= post.id %>?returnCategory=<%= category || 'all' %>">Read more</a>
-            </div>
+                <a href="/blog/<%= post.id %>?returnCategory=<%= category || ' all' %>">Read more</a>
+                    </div>
 
-            <!-- Show edit/delete options -->
-            <% if (isAdmin || (currentUserId && post.user_id===currentUserId)) { %>
-                <div class="post-options">
-                    <% if (currentUserId && post.user_id===currentUserId) { %>
-                        <a href="/edit-blog/<%= post.id %>?returnCategory=<%= returnCategory %>">Edit</a>
+                    <!-- Show edit/delete options -->
+                    <% if (isAdmin || (currentUserId && post.user_id===currentUserId)) { %>
+                        <div class="post-options">
+                            <% if (currentUserId && post.user_id===currentUserId) { %>
+                                <a href="/edit-blog/<%= post.id %>?returnCategory=<%= returnCategory %>">Edit</a>
+                                <% } %>
+                                    <a href="/delete-blog/<%= post.id %>"
+                                        onclick="return confirm('Are you sure you want to delete this post?');">Delete</a>
+                        </div>
                         <% } %>
-                            <a href="/delete-blog/<%= post.id %>"
-                                onclick="return confirm('Are you sure you want to delete this post?');">Delete</a>
                 </div>
-                <% } %>
-        </div>
-        <% }); %>
-
-            <!-- Display the blog deleted success message -->
-            <% if (messageBlogDeleted) { %>
-                <div class="blog-deleted-alert-success">
-                    <%= messageBlogDeleted %>
-                </div>
-                <% } %>
+                <% }); %>
 
 </body>
 
