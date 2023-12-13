@@ -62,13 +62,18 @@
 
   <!-- Blog Post Creation Form -->
   <div class="create-post-container">
+
     <h1>Create a New Blog Post</h1>
+
     <form action="/submit-blog" method="post" id="blog-form">
+
+      <!-- Input field for the blog post title -->
       <div class="form-group">
         <label for="title">Title:</label>
         <input type="text" id="title" name="title" required>
       </div>
 
+      <!-- Dropdown to select the category of the blog post -->
       <div class="form-group">
         <label for="category_id">Category:</label>
         <select id="category_id" name="category_id">
@@ -80,11 +85,13 @@
         </select>
       </div>
 
+      <!-- Input field for tags -->
       <div class="form-group">
         <label for="tags">Tags (separated by commas):</label>
         <input type="text" id="tags" name="tags" placeholder="e.g., nature, travel, photography">
       </div>
 
+      <!-- Text editor for the blog post content -->
       <div class="form-group">
         <label for="content">Content:</label>
         <!-- Create a container for the Quill editor -->
@@ -113,6 +120,7 @@
       }
     });
   
+    // Load and display the post's content in the Quill editor if the post exists and has content
     <% if (typeof post !== 'undefined' && post.content) { %>
       var postContent = "<%- post.content %>";
       quill.root.innerHTML = postContent;
