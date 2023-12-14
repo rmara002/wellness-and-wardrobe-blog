@@ -60,6 +60,7 @@
 
     <h1>Search for a TV Show</h1>
 
+    <!-- Display a search form and search results for TV shows -->
     <div class="show-search">
         <form action="/search-shows" method="get">
             <input class="search-box" type="text" name="search" placeholder="Search TV Shows" required>
@@ -67,8 +68,10 @@
         </form>
     </div>
 
+    <!-- Display TV show results if available -->
     <% if(shows) { %>
         <div class="shows-container">
+            <!-- Displays show name, image, genre, summary, episode count if available -->
             <% shows.forEach(showItem=> {
                 const show = showItem.show; %>
                 <div class="show">
@@ -96,7 +99,7 @@
         </div>
 
         <% } else if(error) { %>
-            <p class="show-error-message"><%= error %></p>
+            <p class="show-error-message"><%= error %></p> <!-- Display an error message if there was an error in the search -->
         <% } %>
 
 </body>
