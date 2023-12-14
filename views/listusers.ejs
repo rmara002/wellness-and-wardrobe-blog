@@ -58,10 +58,9 @@
         </div> <!-- End of wrapping div for the right links -->
     </nav>
 
-    <h1>
-        <%=siteName%>'s Registered Users
-    </h1>
+    <h1><%=siteName%>'s Registered Users</h1>
 
+    <!-- List's all the registered users, showing their first name, last name, and email -->
     <ul>
         <% users.forEach(function(user) { %>
             <li>Username: <%= user.username %>, First Name: <%= user.first_name %>, Last Name: <%= user.last_name %>,
