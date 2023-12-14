@@ -58,10 +58,10 @@
         </div> <!-- End of wrapping div for the right links -->
     </nav>
 
-    <h1>
-        <%- message %>
-    </h1>
+    <!-- Displays any of the message below -->
+    <h1><%- message %></h1>
 
+    <!-- Check if the message is not one of the specific messages, and display the welcome message -->
     <% if (!message.includes("Registration successful! Login to start blogging. We will send an email to you at") &&
         message !=="Error during login." && message !=="No such user found." && message
         !=="Error during password comparison." && message !=="Login successful! Welcome to Wellness and Wardrobe Blog."
