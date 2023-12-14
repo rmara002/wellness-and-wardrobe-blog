@@ -58,23 +58,29 @@
         </div> <!-- End of wrapping div for the right links -->
     </nav>
 
-  <h1>
-    Login to <%=siteName%>
-  </h1>
+  <h1>Login to <%=siteName%></h1>
 
+  <!-- Login Form -->
   <div class="login-container">
     <form method="POST" action="/loggedin">
+
+      <!-- Input field for username -->
       <p>Username: <input id="username" type="text" name="username" required autofocus /></p>
+
+      <!-- Input field for password -->
       <p>Password:
         <input id="login-password" type="password" name="password" required oncopy="return false;" />
         <span onclick="toggleLoginPasswordVisibility()" id="loginPasswordToggle" class="toggle-password">Show
           Password</span>
       </p>
+
       <input type="submit" value="Login" />
     </form>
 
+    <!-- Register Link -->
     <p>Don't have an account?<a href="/register">Register</a></p>
 
+    <!-- Displays the login error message -->
     <div class="login-error-message">
       <% if (typeof message !=='undefined' && message) { %>
         <span>
@@ -84,6 +90,7 @@
     </div>
   </div>
 
+  <!-- Function for Password Toggle -->
   <script>
     function toggleLoginPasswordVisibility() {
       const loginPasswordInput = document.getElementById('login-password');
