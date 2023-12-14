@@ -58,27 +58,28 @@
         </div> <!-- End of wrapping div for the right links -->
     </nav>
 
-  <h1>Register for <%=siteName%>
-  </h1>
+  <h1>Register for <%=siteName%></h1>
 
+  <!-- Registration Form -->
   <div class="register-container">
     <form method="POST" action="/registered">
-      <p>
+      <p> <!-- Input field for first name -->
         <label for="first">First name:</label>
         <input id="first" type="text" name="first" placeholder="First Name" required autofocus />
       </p>
 
-      <p>
+      <p> <!-- Input field for last name -->
         <label for="last">Last name:</label>
         <input id="last" type="text" name="last" placeholder="Last Name" required />
       </p>
 
-      <p>
+      <p> <!-- Input field for email -->
         <label for="email">Email:</label>
         <input id="email" type="email" name="email" placeholder="email@example.com" required
           oninput="validateEmail(this)" />
       </p>
 
+      <!-- Function for Email Validation -->
       <script>
         function validateEmail(input) {
           if (input.value === "") {
@@ -91,12 +92,12 @@
         }
       </script>
 
-      <p>
+      <p> <!-- Input field for username -->
         <label for="username">Username:</label>
         <input id="username" type="text" name="username" placeholder="Username" required />
       </p>
 
-      <p>
+      <p> <!-- Input field for password -->
         <label for="password">Password:</label>
         <input id="password" type="password" name="password" placeholder="Password"
           pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,}" required
@@ -106,6 +107,7 @@
         <!-- Set to "Show" by default -->
       </p>
 
+      <!-- Function for Password Toggle -->
       <script>
         function togglePasswordVisibility() {
           const passwordInput = document.getElementById('password');
@@ -122,6 +124,7 @@
         }
       </script>
 
+      <!-- Confirm Password Input with Confirm Password Toggle Function -->
       <p>
         <label for="confirm-password">Confirm Password:</label>
         <input id="confirm-password" type="password" name="confirm-password" placeholder="Confirm Password" required
@@ -130,6 +133,7 @@
           Password</span>
       </p>
 
+      <!-- Function for Confirm Password Toggle -->
       <script>
         function toggleConfirmPasswordVisibility() {
           const confirmPasswordInput = document.getElementById('confirm-password');
@@ -146,6 +150,7 @@
         }
       </script>
 
+      <!-- Displays the register error message -->
       <div class="register-error-message">
         <% if (typeof message !=='undefined' && message) { %>
           <span>
