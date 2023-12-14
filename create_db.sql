@@ -45,6 +45,8 @@ CREATE TABLE posts (
     FOREIGN KEY(category_id) REFERENCES categories(id)
 );
 
+ALTER TABLE posts ADD COLUMN last_updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+
 -- Blog post tags relationship table
 CREATE TABLE post_tags (
     post_id INT,
@@ -80,5 +82,5 @@ CREATE TABLE ratings (
 
 
 -- Update user creation and privileges
-CREATE USER 'appuser'@'localhost' IDENTIFIED WITH mysql_native_password BY 'blog2027';
-GRANT ALL PRIVILEGES ON myBlog.* TO 'appuser'@'localhost';
+CREATE USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'ichize';
+GRANT ALL PRIVILEGES ON myBlog.* TO 'root'@'localhost';
