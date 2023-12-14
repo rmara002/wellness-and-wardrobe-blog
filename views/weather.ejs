@@ -62,11 +62,13 @@
 
     <div class="weather-container">
 
+        <!-- Form to submit a city for weather information -->
         <form action="/weather" method="post">
             <input class="search-box" type="text" name="city" placeholder="Enter city name" required>
             <input type="submit" value="Get Weather">
         </form>
 
+        <!-- Display weather information and details if available -->
         <% if(weather) { %>
             <div class="weather-info">
                 <h2>Weather in <%= weather.city %>
@@ -103,6 +105,7 @@
             </div>
             <% } %>
 
+                <!-- Display an error message if there was an error fetching weather data -->
                 <% if(error) { %>
                     <p class="weather-error">
                         <%= error %>
