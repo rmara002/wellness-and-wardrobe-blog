@@ -61,6 +61,8 @@
 
     <!-- Blog Post -->
     <div class="post-container">
+
+        <!-- Return Categories -->
         <% let returnCategoryText='All Blogs' ; %>
             <% if (returnCategory==='1' ) { %>
                 <% returnCategoryText='Fashion Blogs' ; %>
@@ -68,6 +70,7 @@
                         <% returnCategoryText='Health & Wellness Blogs' ; %>
                             <% } %>
 
+                                <!-- Return Category Link -->
                                 <h4>
                                     <a href="/blog<%= returnCategory && returnCategory !== 'all' ? '?category=' + returnCategory : '' %>">
                                         Return to <%= returnCategoryText %>
@@ -75,7 +78,7 @@
                                 </h4>
 
                                 <h1>
-                                    <%= post.title %>
+                                    <%= post.title %> <!-- Display blog title -->
                                 </h1>
 
                                 <!-- Display blog post details: author, post created at, time when last edited, category, tags -->
@@ -112,7 +115,7 @@
                 <!-- Display the full content -->
                 <div class="full-post-content"><%- post.content %></div>
 
-                <!-- Show delete option for admin or the post creator -->
+                <!-- Show edit and delete options only if the user is an admin or the author of the post -->
                 <% if (isAdmin || (currentUserId && post.user_id===currentUserId)) { %>
                     <% if (currentUserId && post.user_id===currentUserId) { %>
                         <a href="/edit-blog/<%= post.id %>?returnCategory=<%= returnCategory %>">Edit</a>
@@ -143,7 +146,9 @@
                                     </div>
                                 </div>
 
+                                <!-- Star Rating Functions -->
                                 <script>
+                                    // Function to handle setting the rating when a user clicks on a star
                                     function setRating(rating) {
                                         console.log("Rating clicked: ", rating);
                                         if (!"<%= username %>") {
@@ -151,11 +156,12 @@
                                             return;
                                         }
 
+                                        // Make a fetch request to update the rating for the post
                                         fetch('/rate/' + "<%= post.id %>" + '/' + rating, { method: 'POST' })
                                             .then(response => response.json())
                                             .then(data => {
                                                 if (data.success) {
-                                                    updateAverageRating(data.averageRating);
+                                                    updateAverageRating(data.averageRating); // Update the displayed average rating and highlight stars
                                                     highlightStars(rating); // Highlight stars based on user's rating
                                                 } else {
                                                     alert('Error submitting rating');
@@ -166,6 +172,7 @@
                                             });
                                     }
 
+                                    // Function to handle hovering over stars to highlight them
                                     function hoverRating(rating) {
                                         const stars = document.querySelectorAll('#stars .star');
                                         stars.forEach((star, index) => {
@@ -176,6 +183,7 @@
                                         });
                                     }
 
+                                    // Function to reset stars to match the average rating
                                     function resetStarsToAverage() {
                                         const averageRating = parseFloat(document.getElementById('average-rating-value').innerText);
                                         const stars = document.querySelectorAll('#stars .star');
@@ -189,6 +197,7 @@
                                         });
                                     }
 
+                                    // Function to highlight stars based on the given rating
                                     function highlightStars(rating) {
                                         const stars = document.querySelectorAll('#stars .star');
                                         stars.forEach((star, index) => {
@@ -198,6 +207,7 @@
                                         console.log('highlightStars called with', rating);
                                     }
 
+                                    // Function to update the displayed average rating
                                     function updateAverageRating(averageRating) {
                                         document.getElementById('average-rating-value').innerText = averageRating.toFixed(1);
                                         resetStarsToAverage();
@@ -212,8 +222,7 @@
                                     });
                                 </script>
 
-
-                                <!-- Blog comment section -->
+                                <!-- Blog Comment Section -->
                                 <!-- Check if the user is logged in -->
                                 <% if (username) { %>
                                     <!-- Comment form for logged-in users -->
@@ -230,6 +239,7 @@
                                                 href="/login">login</a> or <a href="/register">register</a>.</p>
                                         <% } %>
 
+                                            <!-- Display comment details: author, post created at, time when last edited -->
                                             <div class="comments-container">
                                                 <% comments.forEach(function(comment) { %>
                                                     <div class="comment-box" id="comment-box-<%= comment.id %>">
@@ -284,7 +294,9 @@
                                                     <% }); %>
                                             </div>
 
+                                            <!-- Comment Functions -->
                                             <script>
+                                                // Function to show edit form
                                                 function showEditForm(commentId) {
                                                     document.getElementById('edit-form-' + commentId).style.display = 'block';
                                                     document.querySelector('#edit-form-' + commentId + ' button[type="submit"]').style.display = 'block';
@@ -292,6 +304,7 @@
                                                     document.getElementById('comment-content-' + commentId).style.display = 'none';
                                                 }
 
+                                                // Function to hide edit form
                                                 function hideEditForm(commentId) {
                                                     document.getElementById('edit-form-' + commentId).style.display = 'none';
                                                     document.querySelector('#edit-form-' + commentId + ' button[type="submit"]').style.display = 'none';
@@ -299,6 +312,7 @@
                                                     document.getElementById('comment-content-' + commentId).style.display = 'block';
                                                 }
 
+                                                // Function to delete comment
                                                 function deleteComment(e, commentId) {
                                                     e.preventDefault();
 
@@ -329,6 +343,7 @@
                                                     return false;
                                                 }
 
+                                                // Function to show comment deletion success or error message 
                                                 function showAlert(type, message) {
                                                     const alertBox = document.createElement('div');
                                                     alertBox.className = 'comment-alert';
