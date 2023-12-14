@@ -60,6 +60,7 @@
 
     <h1>Delete a User</h1>
 
+    <!-- A search form to delete a user -->
     <div class="search-container">
         <form action="/userdeleted" method="post">
             <input class="search-box" type="text" placeholder="Username" id="username" name="username" required>
@@ -67,6 +68,7 @@
         </form>
     </div>
 
+    <!-- Show error or success message regarding deletion of user -->
     <% if (message) { %>
         <p class="show-error-message">
             <%= message %>
