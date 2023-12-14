@@ -1,9 +1,16 @@
+// Import the bcrypt library for password hashing
 const bcrypt = require('bcrypt');
+
+// Import specific functions from the 'express-validator' library
+// 'check' is used to validate and sanitize input fields (like form data)
+// 'validationResult' is used to collect the results of those validations
 const { check, validationResult } = require('express-validator');
 
 module.exports = function (app, blogData) {
+    // Used to check if a user is logged in or not
     const redirectLogin = (req, res, next) => {
         if (!req.session.userId) {
+            // If the user is not logged in, redirect them to the login page
             res.redirect('./login')
         } else { next(); }
     }
