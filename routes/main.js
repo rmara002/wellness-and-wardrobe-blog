@@ -205,7 +205,7 @@ module.exports = function (app, blogData) {
                     const encodedMessage = encodeURIComponent(successMessage);
 
                     // Redirect to the homepage with the message
-                    res.redirect(`/?message=${encodedMessage}`);
+                    res.redirect(`./?message=${encodedMessage}`);
 
                 });
             });
@@ -287,9 +287,9 @@ module.exports = function (app, blogData) {
                 return res.status(500).send('Error deleting user.');
             }
             if (result.affectedRows === 0) { // No user found
-                res.redirect('/deleteuser?message=No such user found.');
+                res.redirect('deleteuser?message=No such user found.');
             } else {
-                res.redirect('/deleteuser?message=User ' + encodeURIComponent(username) + ' deleted successfully.');
+                res.redirect('deleteuser?message=User ' + encodeURIComponent(username) + ' deleted successfully.');
             }
         });
     });
@@ -300,7 +300,7 @@ module.exports = function (app, blogData) {
             if (err) {
                 return res.redirect('./');
             }
-            res.redirect('/?message=You are now logged out.');
+            res.redirect('./?message=You are now logged out.');
         });
     });
 
@@ -314,7 +314,7 @@ module.exports = function (app, blogData) {
         const isAdmin = req.session.username === 'admin'; // Check if the logged-in user is 'admin'
 
         let sqlQuery = `
-            SELECT p.id, p.user_id, p.title, p.content, p.created_at, p.last_updated_at, 
+            SELECT p.id, p.user_id, p.title, p.content, p.created_at, p.last_updated_at,
                    u.username, c.name AS categoryName, c.id AS categoryId,
                    GROUP_CONCAT(t.name SEPARATOR ', ') AS tags
             FROM posts p
@@ -367,7 +367,7 @@ module.exports = function (app, blogData) {
         const isAdmin = req.session.username === 'admin'; // Check if the logged-in user is 'admin'
 
         let sqlQuery = `
-        SELECT p.id, p.title, p.content, p.created_at, p.last_updated_at, p.user_id, 
+        SELECT p.id, p.title, p.content, p.created_at, p.last_updated_at, p.user_id,
                u.username, c.name as categoryName, c.id as categoryId,
                GROUP_CONCAT(t.name SEPARATOR ', ') AS tags
         FROM posts p
@@ -428,7 +428,7 @@ module.exports = function (app, blogData) {
     // Route for Creating a Blog
     app.get('/create-blog', fetchCategories, function (req, res) {
         if (!req.session.username) {
-            res.redirect('/login'); // Redirect to login if not logged in
+            res.redirect('login'); // Redirect to login if not logged in
         } else {
             let data = Object.assign({}, blogData, { username: req.session.username });
             res.render('create-blog.ejs', data);
@@ -476,7 +476,7 @@ module.exports = function (app, blogData) {
                 });
             });
 
-            res.redirect(`/blog/${postId}`);
+            res.redirect(`blog/${postId}`);
         });
     });
 
