@@ -11,7 +11,7 @@
 
 <body>
     <!-- Blog image at the top -->
-    <div class="logo-container"><img src="../images/blog logo.png" alt="Blog Website Logo" class="logo-pic"></div>
+    <div class="logo-container"><img src="/images/blog logo.png" alt="Blog Website Logo" class="logo-pic"></div>
 
     <!-- Navigation bar -->
     <nav>
@@ -320,7 +320,7 @@
                                                         return false;
                                                     }
 
-                                                    fetch(`/comment/${commentId}/delete`, {
+                                                   fetch(`/comment/${commentId}/delete`, {
                                                         method: 'POST',
                                                         headers: {
                                                             'Content-Type': 'application/json',
