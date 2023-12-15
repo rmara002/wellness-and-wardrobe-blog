@@ -130,7 +130,6 @@ nav a {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
 }
 
 .search-box {
@@ -246,7 +245,7 @@ input[type="submit"]:hover {
 
 .register-error-message {
   color: red;
-  margin-bottom: 10px;
+  margin-top: 20px;
 }
 
 /* Login and Registration Password Show/Hide Toggle */
@@ -469,5 +468,4 @@ input[type="submit"]:hover {
   display: flex;
   flex-direction: column; /* stacks children vertically */
   align-items: center;
-  height: 100%;
 }
